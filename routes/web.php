@@ -17,6 +17,7 @@ use App\Http\Controllers\ChangeHistoryController;
 use App\Http\Controllers\DeviceConfigController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RegisterRequestController;
+use App\Http\Controllers\PerformanceController;
 
 // =============================================
 // RUTAS PÚBLICAS (Acceso sin autenticación)
@@ -85,3 +86,12 @@ Route::middleware(['auth'])->group(function () {
     
     // ... más rutas específicas por rol si las necesitas
 });
+
+Route::get('/performance/metrics', [App\Http\Controllers\PerformanceController::class, 'metrics'])
+    ->name('performance.metrics')
+    ->middleware('auth');
+
+    // En routes/web.php
+Route::get('/performance/metrics', [PerformanceController::class, 'metrics'])
+    ->name('performance.metrics')
+    ->middleware('auth');
