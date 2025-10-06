@@ -194,10 +194,10 @@
                     <div class="col-md-8">
                         <div class="mb-4">
                             <i class="fas fa-chart-line fa-4x text-info mb-3"></i>
-                            <h3>Panel de Rendimiento del Sistema</h3>
+                            <h3>Estado General del Sistema</h3>
                             <p class="text-muted">
-                                Accede a métricas detalladas, gráficos en tiempo real y análisis completo 
-                                del rendimiento de tu infraestructura OLT.
+                                Acceso a métricas, gráficos en tiempo real y un análisis completo 
+                                del rendimiento de la red.
                             </p>
                         </div>
                         
@@ -230,12 +230,7 @@
                             Acceder al Panel de Rendimiento
                         </a>
                         
-                        <div class="mt-3">
-                            <small class="text-muted">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Disponible para todos los usuarios del sistema
-                            </small>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -258,7 +253,7 @@
     font-weight: bold;
 }
 .bg-gradient-info {
-    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    background: linear-gradient(135deg, #17a2b8 0%, #0d2ec5ff 100%);
 }
 .feature-item {
     padding: 1rem;
