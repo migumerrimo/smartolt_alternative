@@ -9,7 +9,7 @@
     /**
      * Devuelve el color Bootstrap según la severidad de la alarma
      */
-    function getSeverityColor($severity) {
+    $getSeverityColor = function($severity) {
         switch($severity) {
             case 'critical': return 'danger';
             case 'major': return 'warning';
@@ -17,12 +17,12 @@
             case 'warning': return 'secondary';
             default: return 'light';
         }
-    }
+    };
 
     /**
      * Devuelve el ícono Font Awesome según el tipo de dispositivo
      */
-    function getActivityIcon($deviceType) {
+    $getActivityIcon = function($deviceType) {
         switch(strtolower($deviceType)) {
             case 'olt': return 'network-wired';
             case 'onu': return 'wifi';
@@ -31,7 +31,7 @@
             case 'server': return 'server';
             default: return 'cog';
         }
-    }
+    };
 @endphp
 
 <div class="container-fluid">
@@ -82,11 +82,12 @@
                     <h6 class="card-title mb-0">🔌 OLTs</h6>
                 </div>
                 <div class="card-body text-center">
-                    <h1 class="display-4 text-primary">{{ $olts_active ?? 8 }}/{{ $olts_total ?? 10 }}</h1>
+                    <h1 class="display-4 text-primary">{{ $olts_active ?? 0 }}/{{ $olts_total ?? 0 }}</h1>
                     <p class="mb-1">Activas / Totales</p>
                     <div class="progress mb-2">
                         @php
-                            $olts_percentage = (($olts_active ?? 8) / ($olts_total ?? 10)) * 100;
+                            $olts_total_safe = ($olts_total ?? 0) > 0 ? ($olts_total ?? 0) : 1;
+                            $olts_percentage = (($olts_active ?? 0) / $olts_total_safe) * 100;
                         @endphp
                         <div class="progress-bar bg-primary" style="width: {{ $olts_percentage }}%"></div>
                     </div>
@@ -102,17 +103,18 @@
                     <h6 class="card-title mb-0">📡 ONUs</h6>
                 </div>
                 <div class="card-body text-center">
-                    <h1 class="display-4 text-success">{{ $onus_online }}/{{ $onus_total }}</h1>
+                    <h1 class="display-4 text-success">{{ $onus_online ?? 0 }}/{{ $onus_total ?? 0 }}</h1>
                     <p class="mb-1">Online / Totales</p>
                     <div class="progress mb-2">
                         @php
-                            $onus_percentage = $onus_total > 0 ? ($onus_online / $onus_total) * 100 : 0;
+                            $onus_total_safe = ($onus_total ?? 0) > 0 ? ($onus_total ?? 0) : 1;
+                            $onus_percentage = (($onus_online ?? 0) / $onus_total_safe) * 100;
                         @endphp
                         <div class="progress-bar bg-success" style="width: {{ $onus_percentage }}%"></div>
                     </div>
                     <small class="text-muted">
                         {{ number_format($onus_percentage, 1) }}% Conectadas<br>
-                        <small class="text-muted">{{ $onus_registered }} reg. | {{ $onus_authenticated }} auth.</small>
+                        <small class="text-muted">{{ $onus_registered ?? 0 }} reg. | {{ $onus_authenticated ?? 0 }} auth.</small>
                     </small>
                 </div>
             </div>
@@ -155,16 +157,16 @@
                 <div class="card-body text-center">
                     <div class="row text-center">
                         <div class="col-6">
-                            <h4 class="text-info mb-0">{{ $bandwidth_usage ?? 65 }}%</h4>
+                            <h4 class="text-info mb-0">{{ $bandwidth_usage ?? 0 }}%</h4>
                             <small>BW Usado</small>
                         </div>
                         <div class="col-6">
-                            <h4 class="text-success mb-0">{{ $latency ?? 15 }}ms</h4>
+                            <h4 class="text-success mb-0">{{ $latency ?? 0 }}ms</h4>
                             <small>Latencia</small>
                         </div>
                     </div>
                     <div class="mt-2">
-                        <small class="text-muted">Packet Loss: {{ $packet_loss ?? 0.1 }}%</small>
+                        <small class="text-muted">Packet Loss: {{ $packet_loss ?? 0 }}%</small>
                     </div>
                 </div>
             </div>
@@ -179,6 +181,7 @@
                     <h5 class="card-title mb-0">🔍 OLTs - Estado Detallado</h5>
                 </div>
                 <div class="card-body">
+                    @if(isset($olts_detailed) && $olts_detailed->count() > 0)
                     <div class="table-responsive">
                         <table class="table table-hover table-sm">
                             <thead class="table-dark">
@@ -209,15 +212,15 @@
                                         <small>{{ $olt->management_ip }}</small>
                                     </td>
                                     <td>
-                                        <span class="text-success">{{ $olt->onus_online_count }}</span>/
-                                        <span class="text-muted">{{ $olt->onus_total_count }}</span>
+                                        <span class="text-success">{{ $olt->onus_online_count ?? 0 }}</span>/
+                                        <span class="text-muted">{{ $olt->onus_total_count ?? 0 }}</span>
                                     </td>
                                     <td>
                                         <small>{{ $olt->location ?? 'N/A' }}</small>
                                     </td>
                                     <td>
-                                        <span class="badge bg-{{ $olt->active_alarms_count > 0 ? 'danger' : 'success' }}">
-                                            {{ $olt->active_alarms_count }}
+                                        <span class="badge bg-{{ ($olt->active_alarms_count ?? 0) > 0 ? 'danger' : 'success' }}">
+                                            {{ $olt->active_alarms_count ?? 0 }}
                                         </span>
                                     </td>
                                     <td>
@@ -233,6 +236,12 @@
                             </tbody>
                         </table>
                     </div>
+                    @else
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-network-wired fa-3x mb-3"></i>
+                        <p>No hay OLTs registradas en el sistema</p>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -250,19 +259,19 @@
                     <div class="row text-center">
                         <div class="col-4">
                             <div class="mb-3">
-                                <h4 class="text-{{ $bandwidth_usage > 80 ? 'danger' : 'info' }}">{{ $bandwidth_usage }}%</h4>
+                                <h4 class="text-{{ ($bandwidth_usage ?? 0) > 80 ? 'danger' : 'info' }}">{{ $bandwidth_usage ?? 0 }}%</h4>
                                 <small>BW Usado</small>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="mb-3">
-                                <h4 class="text-{{ $latency > 50 ? 'warning' : 'success' }}">{{ $latency }}ms</h4>
+                                <h4 class="text-{{ ($latency ?? 0) > 50 ? 'warning' : 'success' }}">{{ $latency ?? 0 }}ms</h4>
                                 <small>Latencia</small>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="mb-3">
-                                <h4 class="text-{{ $packet_loss > 1 ? 'danger' : 'secondary' }}">{{ $packet_loss }}%</h4>
+                                <h4 class="text-{{ ($packet_loss ?? 0) > 1 ? 'danger' : 'secondary' }}">{{ $packet_loss ?? 0 }}%</h4>
                                 <small>Packet Loss</small>
                             </div>
                         </div>
@@ -287,34 +296,35 @@
                     <div class="row text-center">
                         <div class="col-3">
                             <div class="mb-2">
-                                <h5 class="text-success mb-1">{{ $onus_online }}</h5>
+                                <h5 class="text-success mb-1">{{ $onus_online ?? 0 }}</h5>
                                 <small class="text-success">Online</small>
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="mb-2">
-                                <h5 class="text-primary mb-1">{{ $onus_registered }}</h5>
+                                <h5 class="text-primary mb-1">{{ $onus_registered ?? 0 }}</h5>
                                 <small class="text-primary">Registradas</small>
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="mb-2">
-                                <h5 class="text-info mb-1">{{ $onus_authenticated }}</h5>
+                                <h5 class="text-info mb-1">{{ $onus_authenticated ?? 0 }}</h5>
                                 <small class="text-info">Autenticadas</small>
                             </div>
                         </div>
                         <div class="col-3">
                             <div class="mb-2">
-                                <h5 class="text-danger mb-1">{{ $onus_offline }}</h5>
+                                <h5 class="text-danger mb-1">{{ $onus_offline ?? 0 }}</h5>
                                 <small class="text-danger">Offline</small>
                             </div>
                         </div>
                     </div>
                     <div class="progress mt-2" style="height: 10px;">
                         @php
-                            $online_percent = $onus_total > 0 ? ($onus_online / $onus_total) * 100 : 0;
-                            $registered_percent = $onus_total > 0 ? ($onus_registered / $onus_total) * 100 : 0;
-                            $auth_percent = $onus_total > 0 ? ($onus_authenticated / $onus_total) * 100 : 0;
+                            $onus_total_safe = ($onus_total ?? 0) > 0 ? ($onus_total ?? 0) : 1;
+                            $online_percent = (($onus_online ?? 0) / $onus_total_safe) * 100;
+                            $registered_percent = (($onus_registered ?? 0) / $onus_total_safe) * 100;
+                            $auth_percent = (($onus_authenticated ?? 0) / $onus_total_safe) * 100;
                         @endphp
                         <div class="progress-bar bg-success" style="width: {{ $online_percent }}%"></div>
                         <div class="progress-bar bg-primary" style="width: {{ $registered_percent }}%"></div>
@@ -334,26 +344,26 @@
                 </div>
                 <div class="card-body">
                     <div class="list-group list-group-flush">
-                        @foreach($recent_alarms as $alarm)
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="badge bg-{{ getSeverityColor($alarm->severity) }} me-2">
-                                    {{ ucfirst($alarm->severity) }}
-                                </span>
-                                <small>{{ Str::limit($alarm->message, 50) }}</small>
-                                <br>
-                                <small class="text-muted">
-                                    {{ $alarm->olt->name }} 
-                                    @if($alarm->onu)
-                                    | ONU: {{ $alarm->onu->serial_number }}
-                                    @endif
-                                </small>
+                        @if(isset($recent_alarms) && $recent_alarms->count() > 0)
+                            @foreach($recent_alarms as $alarm)
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge bg-{{ $getSeverityColor($alarm->severity) }} me-2">
+                                        {{ ucfirst($alarm->severity) }}
+                                    </span>
+                                    <small>{{ Str::limit($alarm->message, 50) }}</small>
+                                    <br>
+                                    <small class="text-muted">
+                                        {{ $alarm->olt->name ?? 'OLT Desconocida' }} 
+                                        @if($alarm->onu)
+                                        | ONU: {{ $alarm->onu->serial_number }}
+                                        @endif
+                                    </small>
+                                </div>
+                                <small class="text-muted">{{ $alarm->detected_at->diffForHumans() }}</small>
                             </div>
-                            <small class="text-muted">{{ $alarm->detected_at->diffForHumans() }}</small>
-                        </div>
-                        @endforeach
-                        
-                        @if($recent_alarms->count() == 0)
+                            @endforeach
+                        @else
                         <div class="list-group-item text-center text-muted">
                             <i class="fas fa-check-circle text-success me-2"></i>
                             No hay alarmas activas
@@ -377,24 +387,24 @@
                     <div class="row text-center">
                         <div class="col-4">
                             <div class="mb-3">
-                                <h5 class="text-{{ $cpu_usage > 80 ? 'danger' : 'success' }}">
-                                    {{ $cpu_usage }}%
+                                <h5 class="text-{{ ($cpu_usage ?? 0) > 80 ? 'danger' : 'success' }}">
+                                    {{ $cpu_usage ?? 0 }}%
                                 </h5>
                                 <small>CPU</small>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="mb-3">
-                                <h5 class="text-{{ $memory_usage > 85 ? 'warning' : 'info' }}">
-                                    {{ $memory_usage }}%
+                                <h5 class="text-{{ ($memory_usage ?? 0) > 85 ? 'warning' : 'info' }}">
+                                    {{ $memory_usage ?? 0 }}%
                                 </h5>
                                 <small>Memoria</small>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="mb-3">
-                                <h5 class="text-{{ $storage_usage > 90 ? 'danger' : 'secondary' }}">
-                                    {{ $storage_usage }}%
+                                <h5 class="text-{{ ($storage_usage ?? 0) > 90 ? 'danger' : 'secondary' }}">
+                                    {{ $storage_usage ?? 0 }}%
                                 </h5>
                                 <small>Almacenamiento</small>
                             </div>
@@ -418,21 +428,21 @@
                 </div>
                 <div class="card-body">
                     <div class="list-group list-group-flush">
-                        @foreach($recent_activity as $activity)
-                        <div class="list-group-item d-flex align-items-center">
-                            <i class="fas fa-{{ getActivityIcon($activity->device_type) }} text-primary me-3"></i>
-                            <div class="flex-grow-1">
-                                <small>{{ $activity->description ?? 'Cambio en ' . $activity->device_type }}</small>
-                                <br>
-                                <small class="text-muted">
-                                    {{ $activity->user->name ?? 'Sistema' }} • 
-                                    {{ $activity->date->diffForHumans() }}
-                                </small>
+                        @if(isset($recent_activity) && $recent_activity->count() > 0)
+                            @foreach($recent_activity as $activity)
+                            <div class="list-group-item d-flex align-items-center">
+                                <i class="fas fa-{{ $getActivityIcon($activity->device_type ?? 'default') }} text-primary me-3"></i>
+                                <div class="flex-grow-1">
+                                    <small>{{ $activity->description ?? 'Cambio en ' . ($activity->device_type ?? 'sistema') }}</small>
+                                    <br>
+                                    <small class="text-muted">
+                                        {{ $activity->user->name ?? 'Sistema' }} • 
+                                        {{ $activity->date->diffForHumans() }}
+                                    </small>
+                                </div>
                             </div>
-                        </div>
-                        @endforeach
-                        
-                        @if($recent_activity->count() == 0)
+                            @endforeach
+                        @else
                         <div class="list-group-item text-center text-muted">
                             <i class="fas fa-info-circle me-2"></i>
                             No hay actividad reciente registrada
