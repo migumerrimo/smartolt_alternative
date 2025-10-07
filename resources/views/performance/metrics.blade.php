@@ -1,6 +1,39 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    // ====================
+    // HELPERS PARA LA VISTA
+    // ====================
+    
+    /**
+     * Devuelve el color Bootstrap según la severidad de la alarma
+     */
+    function getSeverityColor($severity) {
+        switch($severity) {
+            case 'critical': return 'danger';
+            case 'major': return 'warning';
+            case 'minor': return 'info';
+            case 'warning': return 'secondary';
+            default: return 'light';
+        }
+    }
+
+    /**
+     * Devuelve el ícono Font Awesome según el tipo de dispositivo
+     */
+    function getActivityIcon($deviceType) {
+        switch(strtolower($deviceType)) {
+            case 'olt': return 'network-wired';
+            case 'onu': return 'wifi';
+            case 'router': return 'router';
+            case 'switch': return 'share-alt';
+            case 'server': return 'server';
+            default: return 'cog';
+        }
+    }
+@endphp
+
 <div class="container-fluid">
 
     <!-- HEADER: Estado General + Métricas Clave -->
@@ -304,7 +337,7 @@
                         @foreach($recent_alarms as $alarm)
                         <div class="list-group-item d-flex justify-content-between align-items-center">
                             <div>
-                                <span class="badge bg-{{ $this->getSeverityColor($alarm->severity) }} me-2">
+                                <span class="badge bg-{{ getSeverityColor($alarm->severity) }} me-2">
                                     {{ ucfirst($alarm->severity) }}
                                 </span>
                                 <small>{{ Str::limit($alarm->message, 50) }}</small>
@@ -387,7 +420,7 @@
                     <div class="list-group list-group-flush">
                         @foreach($recent_activity as $activity)
                         <div class="list-group-item d-flex align-items-center">
-                            <i class="fas fa-{{ $this->getActivityIcon($activity->device_type) }} text-primary me-3"></i>
+                            <i class="fas fa-{{ getActivityIcon($activity->device_type) }} text-primary me-3"></i>
                             <div class="flex-grow-1">
                                 <small>{{ $activity->description ?? 'Cambio en ' . $activity->device_type }}</small>
                                 <br>
