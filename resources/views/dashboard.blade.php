@@ -182,6 +182,62 @@
     </div>
 </div>
 
+<!-- NUEVA SECCIÓN: Acceso a Vista de Rendimiento -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-lg">
+            <div class="card-header bg-gradient-info text-white">
+                <h5 class="card-title mb-0">📈 Acceso a Métricas de Rendimiento</h5>
+            </div>
+            <div class="card-body text-center py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="mb-4">
+                            <i class="fas fa-chart-line fa-4x text-info mb-3"></i>
+                            <h3>Estado General del Sistema</h3>
+                            <p class="text-muted">
+                                Acceso a métricas, gráficos en tiempo real y un análisis completo 
+                                del rendimiento de la red.
+                            </p>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="feature-item">
+                                    <i class="fas fa-tachometer-alt text-primary fa-2x mb-2"></i>
+                                    <h6>Métricas en Tiempo Real</h6>
+                                    <small class="text-muted">Monitorización activa</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="feature-item">
+                                    <i class="fas fa-chart-bar text-success fa-2x mb-2"></i>
+                                    <h6>Gráficos Interactivos</h6>
+                                    <small class="text-muted">Análisis visual</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="feature-item">
+                                    <i class="fas fa-bell text-warning fa-2x mb-2"></i>
+                                    <h6>Alertas Inteligentes</h6>
+                                    <small class="text-muted">Detección proactiva</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="{{ route('performance.metrics') }}" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-arrow-right me-2"></i>
+                            Acceder al Panel de Rendimiento
+                        </a>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
 .card {
     transition: transform 0.2s;
@@ -195,6 +251,21 @@
 .display-6 {
     font-size: 2rem;
     font-weight: bold;
+}
+.bg-gradient-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #0d2ec5ff 100%);
+}
+.feature-item {
+    padding: 1rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+.feature-item:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-5px);
+}
+.shadow-lg {
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
 }
 </style>
 @endsection
