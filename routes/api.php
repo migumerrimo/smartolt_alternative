@@ -15,6 +15,9 @@ use App\Http\Controllers\AlarmController;
 use App\Http\Controllers\ChangeHistoryController;
 use App\Http\Controllers\DeviceConfigController;
 
+use App\Http\Controllers\Api\DataController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -62,3 +65,11 @@ Route::apiResource('change-history', ChangeHistoryController::class);
 
 // Device Configs
 Route::apiResource('device-configs', DeviceConfigController::class);
+
+Route::get('/data/olts', [DataController::class, 'getOlts']);
+Route::prefix('data')->group(function () {
+    Route::get('/olts', [DataController::class, 'getOlts']);
+    Route::get('/onus', [DataController::class, 'getOnus']);
+    Route::get('/vlans', [DataController::class, 'getVlans']);
+    Route::get('/users', [DataController::class, 'getUsers']);
+});
