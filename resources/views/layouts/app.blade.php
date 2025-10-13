@@ -51,6 +51,7 @@
                         Codename FreeOLT
                     </li>
                     <li><a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ route('dashboard') }}"><i class="bi bi-house-fill"></i> Dashboard</a></li>
+                    <li><a class="nav-link {{ request()->is('customers*') ? 'active' : '' }}" href="{{ route('customers.index') }}"><i class="bi bi-people-fill"></i> Clientes</a></li>
                     <li><a class="nav-link {{ request()->is('olts*') ? 'active' : '' }}" href="{{ route('olts.index') }}"><i class="bi bi-hdd-network-fill"></i> OLTs</a></li>
                     <li><a class="nav-link {{ request()->is('onus*') ? 'active' : '' }}" href="{{ route('onus.index') }}"><i class="bi bi-router-fill"></i> ONUs</a></li>
                     <li><a class="nav-link {{ request()->is('telemetry*') ? 'active' : '' }}" href="{{ route('telemetry.index') }}"><i class="bi bi-graph-up-arrow"></i> Telemetría</a></li>

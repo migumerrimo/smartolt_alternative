@@ -18,6 +18,8 @@ use App\Http\Controllers\DeviceConfigController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RegisterRequestController;
 use App\Http\Controllers\PerformanceController;
+use App\Http\Controllers\CustomerController;
+
 
 // =============================================
 // RUTAS PÚBLICAS (Acceso sin autenticación)
@@ -95,3 +97,19 @@ Route::get('/performance/metrics', [App\Http\Controllers\PerformanceController::
 Route::get('/performance/metrics', [PerformanceController::class, 'metrics'])
     ->name('performance.metrics')
     ->middleware('auth');
+
+    // Rutas para la gestión de clientes
+Route::prefix('customers')->group(function () {
+    Route::get('/', [CustomerController::class, 'index'])->name('customers.index');
+    Route::get('/create', [CustomerController::class, 'create'])->name('customers.create');
+    Route::post('/', [CustomerController::class, 'store'])->name('customers.store');
+    Route::get('/{customer}', [CustomerController::class, 'show'])->name('customers.show');
+    Route::get('/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
+    Route::put('/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+    Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+    
+    // Rutas específicas para asignación de ONUs
+    Route::get('/{customer}/assign-onu', [CustomerController::class, 'showAssignOnu'])->name('customers.assign-onu');
+    Route::post('/{customer}/assign-onu', [CustomerController::class, 'assignOnu'])->name('customers.assign-onu.store');
+    Route::delete('/{customer}/remove-onu/{onuId}', [CustomerController::class, 'removeOnu'])->name('customers.remove-onu');
+});
