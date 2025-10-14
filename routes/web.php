@@ -112,4 +112,10 @@ Route::prefix('customers')->group(function () {
     Route::get('/{customer}/assign-onu', [CustomerController::class, 'showAssignOnu'])->name('customers.assign-onu');
     Route::post('/{customer}/assign-onu', [CustomerController::class, 'assignOnu'])->name('customers.assign-onu.store');
     Route::delete('/{customer}/remove-onu/{onuId}', [CustomerController::class, 'removeOnu'])->name('customers.remove-onu');
+
+    Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+
+        // Rutas para asignación de ONUs
+    Route::get('/customers/{customer}/assign-onu', [CustomerController::class, 'showAssignOnu'])->name('customers.assign-onu');
+    Route::post('/customers/{customer}/assign-onu', [CustomerController::class, 'assignOnu'])->name('customers.assign-onu.store');
 });

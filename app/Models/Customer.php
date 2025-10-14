@@ -37,13 +37,12 @@ class Customer extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Relación con las ONUs asignadas (la crearemos después)
+        /**
+     * Relación con las ONUs asignadas
      */
     public function assignedOnus()
     {
-        // Por ahora retornamos una relación vacía
-        return $this->hasMany(\App\Models\Customer::class)->where('id', 0);
+        return $this->hasMany(CustomerOnuAssignment::class, 'customer_id');
     }
 
     /**

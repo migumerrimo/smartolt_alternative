@@ -24,22 +24,25 @@
     <!-- Información del Cliente -->
     <div class="col-md-6 mb-4">
         <div class="card">
-            <div class="card-header">
-                <i class="bi bi-person-badge"></i> Información Personal
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-person-badge"></i> Información Personal</span>
+                <a href="{{ route('customers.edit', $customer) }}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-pencil"></i> Editar
+                </a>
             </div>
             <div class="card-body">
                 <table class="table table-borderless">
                     <tr>
                         <th width="40%">Nombre:</th>
-                        <td>{{ $customer->name }}</td>
+                        <td>{{ $customer->user->name }}</td>
                     </tr>
                     <tr>
                         <th>Email:</th>
-                        <td>{{ $customer->email }}</td>
+                        <td>{{ $customer->user->email }}</td>
                     </tr>
                     <tr>
                         <th>Teléfono:</th>
-                        <td>{{ $customer->phone }}</td>
+                        <td>{{ $customer->user->phone }}</td>
                     </tr>
                     <tr>
                         <th>Tipo:</th>
@@ -88,14 +91,20 @@
                         <div class="list-group-item">
                             <div class="d-flex w-100 justify-content-between">
                                 <h6 class="mb-1">{{ $assignment->onu->serial_number }}</h6>
-                                <small class="text-success">Activa</small>
+                                <small class="text-success">{{ ucfirst($assignment->status) }}</small>
                             </div>
                             <p class="mb-1">
                                 <strong>OLT:</strong> {{ $assignment->onu->olt->name }}<br>
                                 <strong>Modelo:</strong> {{ $assignment->onu->model }}<br>
-                                <strong>Costo Mensual:</strong> ${{ number_format($assignment->monthly_cost, 2) }}
+                                <strong>Costo Mensual:</strong> ${{ number_format($assignment->monthly_cost, 2) }}<br>
+                                <strong>Asignado por:</strong> {{ $assignment->assignedBy->name }}
                             </p>
-                            <small>Asignada el: {{ $assignment->assignment_date->format('d/m/Y') }}</small>
+                            <small>Asignada el: {{ $assignment->created_at->format('d/m/Y H:i') }}</small>
+                            @if($assignment->notes)
+                                <div class="mt-2">
+                                    <small><strong>Notas:</strong> {{ $assignment->notes }}</small>
+                                </div>
+                            @endif
                         </div>
                         @endforeach
                     </div>

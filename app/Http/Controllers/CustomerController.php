@@ -79,13 +79,102 @@ class CustomerController extends Controller
                         ->with('success', 'Cliente creado exitosamente.');
     }
 
+        /**
+     * Show the form for editing the specified customer.
+     */
+    public function edit(Customer $customer)
+    {
+        return view('customers.edit', compact('customer'));
+    }
+
+    /**
+     * Update the specified customer in storage.
+     */
+    public function update(Request $request, Customer $customer)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email,' . $customer->user_id,
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
+            'document_number' => 'nullable|string|max:50',
+            'customer_type' => 'required|in:residential,business,corporate',
+        ]);
+
+        // Actualizar el usuario
+        $customer->user->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+        ]);
+
+        // Actualizar el perfil de cliente
+        $customer->update([
+            'customer_type' => $validated['customer_type'],
+            'address' => $validated['address'],
+            'document_number' => $validated['document_number'],
+        ]);
+
+        // Registrar en el historial
+        ChangeHistory::create([
+            'user_id' => auth()->id(),
+            'olt_id' => 1,
+            'device_type' => 'ONU',
+            'device_name' => 'ACTUALIZACION_CLIENTE',
+            'description' => "Cliente actualizado: {$customer->user->name}",
+        ]);
+
+        return redirect()->route('customers.show', $customer)
+                        ->with('success', 'Cliente actualizado exitosamente.');
+    }
+
     /**
      * Display the specified customer.
      */
+    /**
+
+    * Display the specified customer.
+    */
     public function show(Customer $customer)
     {
-        // Versión temporal sin asignaciones ONU
-        return view('customers.show', compact('customer'));
+        $assignedOnus = $customer->assignedOnus()
+                                ->with(['onu.olt', 'assignedBy'])
+                                ->where('status', 'active')
+                                ->get();
+
+        return view('customers.show', compact('customer', 'assignedOnus'));
+    }
+
+    /**
+ * Remove the specified customer from storage.
+ */
+    public function destroy(Customer $customer)
+    {
+        try {
+            $userName = $customer->user->name;
+            
+            // Registrar en el historial antes de eliminar
+            ChangeHistory::create([
+                'user_id' => auth()->id(), 
+                'olt_id' => 1,
+                'device_type' => 'ONU',
+                'device_name' => 'ELIMINACION_CLIENTE',
+                'description' => "Cliente eliminado: {$userName}",
+            ]);
+
+            // Eliminar el perfil de cliente (esto eliminará en cascada las asignaciones ONU cuando las tengamos)
+            $customer->delete();
+            
+            // También eliminamos el usuario asociado
+            $customer->user->delete();
+
+            return redirect()->route('customers.index')
+                            ->with('success', 'Cliente eliminado exitosamente.');
+                            
+        } catch (\Exception $e) {
+            return redirect()->route('customers.index')
+                            ->with('error', 'Error al eliminar el cliente: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -146,4 +235,7 @@ class CustomerController extends Controller
             return back()->with('error', 'Error al asignar ONU: ' . $e->getMessage());
         }
     }
+
+
+
 }

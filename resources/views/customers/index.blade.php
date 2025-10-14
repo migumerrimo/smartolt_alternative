@@ -17,6 +17,13 @@
     </div>
 @endif
 
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
 <div class="card">
     <div class="card-header">
         <i class="bi bi-people-fill"></i> Lista de Clientes
@@ -62,6 +69,37 @@
                                     <a href="{{ route('customers.show', $customer) }}" class="btn btn-outline-primary" title="Ver detalles">
                                         <i class="bi bi-eye"></i>
                                     </a>
+                                    <a href="{{ route('customers.edit', $customer) }}" class="btn btn-outline-warning" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger" title="Eliminar" 
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal{{ $customer->id }}">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Modal de Confirmación de Eliminación -->
+                                <div class="modal fade" id="deleteModal{{ $customer->id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Confirmar Eliminación</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>¿Estás seguro de que deseas eliminar al cliente <strong>{{ $customer->user->name }}</strong>?</p>
+                                                <p class="text-danger"><small>Esta acción no se puede deshacer.</small></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                <form action="{{ route('customers.destroy', $customer) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Eliminar Cliente</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </td>
                         </tr>

@@ -74,4 +74,13 @@ class User extends Authenticatable
             'id' // Local key on customers table
         );
     }
+
+
+        /**
+     * Relación con las asignaciones realizadas
+     */
+    public function onuAssignmentsMade()
+    {
+        return $this->hasMany(CustomerOnuAssignment::class, 'assigned_by');
+    }
 }

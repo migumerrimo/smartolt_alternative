@@ -65,4 +65,6 @@ class Onu extends Model
     {
         return $this->hasMany(CustomerOnuAssignment::class, 'onu_id');
     }
+
+
 }
