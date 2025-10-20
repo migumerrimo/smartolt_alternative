@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    public function authenticated(Request $request, $user)
+    {
+        $user->update(['last_login_at' => now()]);
+    }
+
     public function showLoginForm()
     {
         return view('auth.login');
