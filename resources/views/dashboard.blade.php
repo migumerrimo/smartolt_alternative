@@ -170,7 +170,7 @@
                     </div>
                     <div class="col-6">
                         <small class="text-muted">Versión:</small>
-                        <p class="mb-2"><strong>FreeOLT Alpha 0.1.0</strong></p>
+                        <p class="mb-2"><strong>FreeOLT Alpha 0.9.0</strong></p>
                     </div>
                     <div class="col-12">
                         <small class="text-muted">Sistema:</small>
