@@ -11,11 +11,16 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard', [
-            'olts_count'     => Olt::where('status','active')->count(),
-            'onus_online'    => Onu::where('status','online')->count(),
-            'alarms_active'  => Alarm::where('active',1)->count(),
-            'telemetry_count'=> Telemetry::count(),
-        ]);
+        $olts_count = Olt::where('status', 'active')->count();
+        $onus_online = Onu::where('status', 'online')->count();
+        $alarms_active = Alarm::where('active', 1)->count();
+        $telemetry_count = Telemetry::count();
+
+        return view('dashboard', compact(
+            'olts_count',
+            'onus_online',
+            'alarms_active',
+            'telemetry_count'
+        ));
     }
 }
