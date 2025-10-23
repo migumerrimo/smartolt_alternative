@@ -73,6 +73,36 @@
         </div>
     </div>
 
+    <!-- BOTONES DE REPORTES - NUEVA SECCIÓN -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-3">
+                    <div class="btn-group" role="group" aria-label="Botones de reporte">
+                        <!-- Botón para Vista Previa -->
+                        <a href="{{ route('reports.daily.preview') }}" 
+                           class="btn btn-outline-primary btn-lg" 
+                           target="_blank">
+                            <i class="fas fa-eye me-2"></i>Vista Previa Reporte
+                        </a>
+                        
+                        <!-- Botón para Descargar PDF -->
+                        <a href="{{ route('reports.daily') }}" 
+                           class="btn btn-outline-success btn-lg">
+                            <i class="fas fa-download me-2"></i>Descargar PDF
+                        </a>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Genera reportes detallados del estado del sistema
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- CARDS PRINCIPALES: OLTs, ONUs, Alarmas, Rendimiento -->
     <div class="row mb-4">
         <!-- OLTs -->
@@ -173,6 +203,7 @@
         </div>
     </div>
 
+    <!-- Resto del código permanece igual -->
     <!-- SECCIÓN: OLTs DETALLADAS -->
     <div class="row mb-4">
         <div class="col-12">
@@ -525,6 +556,30 @@
 }
 .chart-container {
     position: relative;
+}
+
+/* Estilos para los botones de reporte */
+.btn-group .btn {
+    border-radius: 8px;
+    margin: 0 5px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-group .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.btn-outline-success:hover {
+    background-color: #198754;
+    color: white;
 }
 </style>
 

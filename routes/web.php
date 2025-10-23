@@ -19,7 +19,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RegisterRequestController;
 use App\Http\Controllers\PerformanceController;
 use App\Http\Controllers\CustomerController;
-
+use App\Http\Controllers\ReportController;
 
 // =============================================
 // RUTAS PÚBLICAS (Acceso sin autenticación)
@@ -71,12 +71,43 @@ Route::middleware(['auth'])->group(function () {
             ->name('register-requests.reject');
     });
 
-});
+    // =============================================
+    // RUTAS DE PERFORMANCE
+    // =============================================
+    Route::get('/performance/metrics', [PerformanceController::class, 'metrics'])
+        ->name('performance.metrics');
 
-// =============================================
-// RUTAS DE REDIRECCIÓN POR ROL (Opcional)
-// =============================================
-Route::middleware(['auth'])->group(function () {
+    // =============================================
+    // RUTAS PARA GESTIÓN DE CLIENTES
+    // =============================================
+    Route::prefix('customers')->group(function () {
+        Route::get('/', [CustomerController::class, 'index'])->name('customers.index');
+        Route::get('/create', [CustomerController::class, 'create'])->name('customers.create');
+        Route::post('/', [CustomerController::class, 'store'])->name('customers.store');
+        Route::get('/{customer}', [CustomerController::class, 'show'])->name('customers.show');
+        Route::get('/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
+        Route::put('/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+        Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+        
+        // Rutas específicas para asignación de ONUs
+        Route::get('/{customer}/assign-onu', [CustomerController::class, 'showAssignOnu'])->name('customers.assign-onu');
+        Route::post('/{customer}/assign-onu', [CustomerController::class, 'assignOnu'])->name('customers.assign-onu.store');
+        Route::delete('/{customer}/remove-onu/{onuId}', [CustomerController::class, 'removeOnu'])->name('customers.remove-onu');
+    });
+
+    // =============================================
+    // RUTAS DE REPORTES
+    // =============================================
+    Route::prefix('reports')->group(function () {
+        // Vista previa en HTML (para testing)
+        Route::get('/daily/preview', [ReportController::class, 'previewDailyReport'])->name('reports.daily.preview');
+        // Descargar PDF
+        Route::get('/daily', [ReportController::class, 'dailyReport'])->name('reports.daily');
+    });
+
+    // =============================================
+    // RUTAS DE REDIRECCIÓN POR ROL (Opcional)
+    // =============================================
     // Estas rutas las puedes implementar después según necesites
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard', ['user' => auth()->user()]);
@@ -87,35 +118,24 @@ Route::middleware(['auth'])->group(function () {
     })->name('technician.dashboard');
     
     // ... más rutas específicas por rol si las necesitas
+
+    // Rutas para reportes de usuarios
+    Route::prefix('users')->group(function () {
+    Route::get('/report/pdf', [UserController::class, 'generatePDF'])->name('users.report.pdf');
+    Route::get('/report/preview', [UserController::class, 'previewPDF'])->name('users.report.preview');
+    });
+
+    // Rutas para reportes de OLTs
+    Route::prefix('olts')->group(function () {
+    Route::get('/report/pdf', [OltController::class, 'generatePDF'])->name('olts.report.pdf');
+    Route::get('/report/preview', [OltController::class, 'previewPDF'])->name('olts.report.preview');
+    });
+
+
+    // Rutas para reportes de ONUs
+    Route::prefix('onus')->group(function () {
+    Route::get('/report/pdf', [OnuController::class, 'generatePDF'])->name('onus.report.pdf');
+    Route::get('/report/preview', [OnuController::class, 'previewPDF'])->name('onus.report.preview');
 });
 
-Route::get('/performance/metrics', [App\Http\Controllers\PerformanceController::class, 'metrics'])
-    ->name('performance.metrics')
-    ->middleware('auth');
-
-    // En routes/web.php
-Route::get('/performance/metrics', [PerformanceController::class, 'metrics'])
-    ->name('performance.metrics')
-    ->middleware('auth');
-
-    // Rutas para la gestión de clientes
-Route::prefix('customers')->group(function () {
-    Route::get('/', [CustomerController::class, 'index'])->name('customers.index');
-    Route::get('/create', [CustomerController::class, 'create'])->name('customers.create');
-    Route::post('/', [CustomerController::class, 'store'])->name('customers.store');
-    Route::get('/{customer}', [CustomerController::class, 'show'])->name('customers.show');
-    Route::get('/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
-    Route::put('/{customer}', [CustomerController::class, 'update'])->name('customers.update');
-    Route::delete('/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
-    
-    // Rutas específicas para asignación de ONUs
-    Route::get('/{customer}/assign-onu', [CustomerController::class, 'showAssignOnu'])->name('customers.assign-onu');
-    Route::post('/{customer}/assign-onu', [CustomerController::class, 'assignOnu'])->name('customers.assign-onu.store');
-    Route::delete('/{customer}/remove-onu/{onuId}', [CustomerController::class, 'removeOnu'])->name('customers.remove-onu');
-
-    Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
-
-        // Rutas para asignación de ONUs
-    Route::get('/customers/{customer}/assign-onu', [CustomerController::class, 'showAssignOnu'])->name('customers.assign-onu');
-    Route::post('/customers/{customer}/assign-onu', [CustomerController::class, 'assignOnu'])->name('customers.assign-onu.store');
 });

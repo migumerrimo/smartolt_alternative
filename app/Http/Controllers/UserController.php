@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use PDF;
 
 class UserController extends Controller
 {
@@ -67,5 +68,47 @@ class UserController extends Controller
         $user->delete();
         if ($request->wantsJson()) return response()->json(null,204);
         return redirect()->route('users.index')->with('success','Usuario eliminado');
+    }
+
+     /**
+     * Generar PDF con listado de usuarios
+     */
+    public function generatePDF()
+    {
+        $users = User::all();
+        
+        $data = [
+            'users' => $users,
+            'title' => 'Reporte de Usuarios',
+            'date' => now()->format('d/m/Y H:i:s'),
+            'totalUsers' => $users->count(),
+            'activeUsers' => $users->where('active', true)->count(),
+            'adminUsers' => $users->where('role', 'admin')->count(),
+            'technicianUsers' => $users->where('role', 'technician')->count(),
+        ];
+
+        $pdf = PDF::loadView('users.pdf', $data);
+        
+        return $pdf->download('reporte-usuarios-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Vista previa del PDF (HTML)
+     */
+    public function previewPDF()
+    {
+        $users = User::all();
+        
+        $data = [
+            'users' => $users,
+            'title' => 'Reporte de Usuarios',
+            'date' => now()->format('d/m/Y H:i:s'),
+            'totalUsers' => $users->count(),
+            'activeUsers' => $users->where('active', true)->count(),
+            'adminUsers' => $users->where('role', 'admin')->count(),
+            'technicianUsers' => $users->where('role', 'technician')->count(),
+        ];
+
+        return view('users.pdf', $data);
     }
 }

@@ -66,5 +66,43 @@ class Onu extends Model
         return $this->hasMany(CustomerOnuAssignment::class, 'onu_id');
     }
 
+    /**
+     * Método helper para obtener el primer cliente asignado
+     */
+    public function getFirstCustomerAttribute()
+    {
+        return $this->customerAssignments->first()->customer ?? null;
+    }
 
+    /**
+     * Método helper para verificar si tiene cliente asignado
+     */
+    public function getHasCustomerAttribute()
+    {
+        return $this->customerAssignments->count() > 0;
+    }
+
+    /**
+     * Método helper para obtener todos los clientes asignados
+     */
+    public function getAllCustomersAttribute()
+    {
+        return $this->customerAssignments->map(function ($assignment) {
+            return $assignment->customer;
+        })->filter();
+    }
+
+    /**
+     * Método helper para obtener nombres de clientes como string
+     */
+    public function getCustomerNamesAttribute()
+    {
+        if ($this->customerAssignments->count() === 0) {
+            return 'Sin asignar';
+        }
+
+        return $this->customerAssignments->map(function ($assignment) {
+            return $assignment->customer->name ?? 'Cliente N/A';
+        })->implode(', ');
+    }
 }

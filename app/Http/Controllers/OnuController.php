@@ -7,6 +7,7 @@ use App\Models\Olt;
 use App\Models\LineProfile;
 use App\Models\ServiceProfile;
 use Illuminate\Http\Request;
+use PDF;
 
 class OnuController extends Controller
 {
@@ -102,4 +103,51 @@ class OnuController extends Controller
         return redirect()->route('onus.index')
                          ->with('success', 'ONU eliminada correctamente');
     }
+
+     /**
+     * Generar PDF con listado de ONUs
+     */
+    public function generatePDF()
+{
+    $onus = Onu::with(['olt', 'customerAssignments.customer'])->get();
+
+    $data = [
+        'onus' => $onus,
+        'title' => 'Reporte de ONUs',
+        'date' => now()->format('d/m/Y H:i:s'),
+        'totalOnus' => $onus->count(),
+        'onlineOnus' => $onus->where('status', 'online')->count(),
+        'offlineOnus' => $onus->where('status', 'offline')->count(),
+        'registeredOnus' => $onus->where('status', 'registered')->count(),
+        'assignedOnus' => $onus->where('has_customer', true)->count(), // Usando el helper
+    ];
+
+    $pdf = PDF::loadView('onus.pdf', $data);
+    
+    return $pdf->download('reporte-onus-' . now()->format('Y-m-d') . '.pdf');
+}
+
+    /**
+     * Vista previa del PDF (HTML)
+     */
+    public function previewPDF()
+    {
+        $onus = Onu::with(['olt', 'customerAssignments.customer'])->get();
+
+        $data = [
+            'onus' => $onus,
+            'title' => 'Reporte de ONUs',
+            'date' => now()->format('d/m/Y H:i:s'),
+            'totalOnus' => $onus->count(),
+            'onlineOnus' => $onus->where('status', 'online')->count(),
+            'offlineOnus' => $onus->where('status', 'offline')->count(),
+            'registeredOnus' => $onus->where('status', 'registered')->count(),
+            'assignedOnus' => $onus->filter(function($onu) {
+                return $onu->customerAssignments->count() > 0;
+            })->count(),
+        ];
+
+        return view('onus.pdf', $data);
+    }
+
 }

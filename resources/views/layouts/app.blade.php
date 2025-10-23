@@ -19,7 +19,7 @@
         }
         .sidebar {
             height: 100vh;
-            background-color: #17a2b8; /* azul tipo info */
+            background-color: #2217b8ff;
         }
         .sidebar .nav-link {
             color: #fff;
@@ -58,6 +58,9 @@
                     <li><a class="nav-link {{ request()->is('alarms*') ? 'active' : '' }}" href="{{ route('alarms.index') }}"><i class="bi bi-exclamation-triangle-fill"></i> Alertas</a></li>
                     <li><a class="nav-link {{ request()->is('device-configs*') ? 'active' : '' }}" href="{{ route('device-configs.index') }}"><i class="bi bi-gear-fill"></i> Configuración</a></li>
                     <li><a class="nav-link {{ request()->is('change-history*') ? 'active' : '' }}" href="{{ route('change-history.index') }}"><i class="bi bi-clock-history"></i> Historial</a></li>
+
+                    <P>SUMMA DEV CONFIDENTIAL SOFTWARE, THIS SYSTEM MAY CONTAIN ERRORS OR INSTABILITIES, REPORT FAILURES TO THE DEVELOPMENT TEAM</P>
+
                 </ul>
 
                 <ul class="navbar-nav">

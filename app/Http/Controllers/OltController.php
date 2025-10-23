@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Olt;
 use Illuminate\Http\Request;
+use PDF;
 
 class OltController extends Controller
 {
@@ -62,4 +63,52 @@ class OltController extends Controller
         if ($request->wantsJson()) return response()->json(null,204);
         return redirect()->route('olts.index')->with('success','OLT eliminada');
     }
+
+     /**
+     * Generar PDF con listado de OLTs
+     */
+    public function generatePDF()
+    {
+        $olts = Olt::withCount(['onus as online_onus_count' => function($query) {
+                    $query->where('status', 'online');
+                }])
+                ->withCount('onus as total_onus_count')
+                ->get();
+
+        $data = [
+            'olts' => $olts,
+            'title' => 'Reporte de OLTs',
+            'date' => now()->format('d/m/Y H:i:s'),
+            'totalOlts' => $olts->count(),
+            'activeOlts' => $olts->where('status', 'active')->count(),
+            'totalOnus' => $olts->sum('total_onus_count'),
+            'onlineOnus' => $olts->sum('online_onus_count'),
+        ];
+
+        $pdf = PDF::loadView('olts.pdf', $data);
+        
+        return $pdf->download('reporte-olts-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    public function previewPDF()
+    {
+        $olts = Olt::withCount(['onus as online_onus_count' => function($query) {
+                    $query->where('status', 'online');
+                }])
+                ->withCount('onus as total_onus_count')
+                ->get();
+
+        $data = [
+            'olts' => $olts,
+            'title' => 'Reporte de OLTs',
+            'date' => now()->format('d/m/Y H:i:s'),
+            'totalOlts' => $olts->count(),
+            'activeOlts' => $olts->where('status', 'active')->count(),
+            'totalOnus' => $olts->sum('total_onus_count'),
+            'onlineOnus' => $olts->sum('online_onus_count'),
+        ];
+
+        return view('olts.pdf', $data);
+    }
+
 }
