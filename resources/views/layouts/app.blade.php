@@ -18,7 +18,7 @@
             font-size: .9rem;
         }
         .sidebar {
-            height: 100vh;
+            height: 115vh;
             background-color: #2217b8ff;
         }
         .sidebar .nav-link {
