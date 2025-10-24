@@ -73,3 +73,13 @@ Route::prefix('data')->group(function () {
     Route::get('/vlans', [DataController::class, 'getVlans']);
     Route::get('/users', [DataController::class, 'getUsers']);
 });
+use App\Http\Controllers\OltTelnetApiController;
+
+Route::prefix('olt/telnet')->group(function () {
+    Route::get('/system/status', [OltTelnetApiController::class, 'systemStatus']);
+    Route::get('/onus/list', [OltTelnetApiController::class, 'listOnus']);
+    Route::post('/onus/add', [OltTelnetApiController::class, 'addOnu']);
+    Route::get('/alarms/active', [OltTelnetApiController::class, 'getAlarms']);
+    Route::post('/vlan/create', [OltTelnetApiController::class, 'createVlan']);
+    Route::post('/command', [OltTelnetApiController::class, 'runCommand']);
+});
