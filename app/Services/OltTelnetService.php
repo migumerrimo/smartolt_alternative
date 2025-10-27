@@ -19,10 +19,10 @@ class OltTelnetService
 
     public function __construct()
     {
-        $this->host = env('OLT_HOST', '192.168.10.10');
+        $this->host = env('OLT_HOST', '10.11.104.2');
         $this->port = (int) env('OLT_PORT', 23);
-        $this->user = env('OLT_USER', 'admin');
-        $this->pass = env('OLT_PASS', 'Huawei123');
+        $this->user = env('OLT_USER', 'root');
+        $this->pass = env('OLT_PASS', 'admin123');
         $this->timeout = (int) env('OLT_TELNET_TIMEOUT', 10);
         $this->retries = (int) env('OLT_TELNET_RETRIES', 2);
     }
