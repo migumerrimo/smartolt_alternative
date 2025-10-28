@@ -138,4 +138,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/report/preview', [OnuController::class, 'previewPDF'])->name('onus.report.preview');
 });
 
+// Rutas para reportes de clientes
+Route::prefix('customers')->group(function () {
+    Route::get('/report/pdf', [CustomerController::class, 'generatePDF'])->name('customers.report.pdf');
+    Route::get('/report/preview', [CustomerController::class, 'previewPDF'])->name('customers.report.preview');
+});
+
+
+
 });

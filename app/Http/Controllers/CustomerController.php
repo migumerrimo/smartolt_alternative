@@ -9,6 +9,7 @@ use App\Models\Olt;
 use App\Models\ChangeHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use PDF;
 
 class CustomerController extends Controller
 {
@@ -17,11 +18,9 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        // Versión temporal básica - solo lista clientes
-        $customers = Customer::with(['user'])
-                        ->orderBy('created_at', 'desc')
-                        ->get();
-
+        // CORRECCIÓN: Usar assignedOnus en lugar de customerAssignments
+        $customers = Customer::with(['user', 'assignedOnus'])->get();
+        
         return view('customers.index', compact('customers'));
     }
 
@@ -79,7 +78,7 @@ class CustomerController extends Controller
                         ->with('success', 'Cliente creado exitosamente.');
     }
 
-        /**
+    /**
      * Show the form for editing the specified customer.
      */
     public function edit(Customer $customer)
@@ -131,10 +130,6 @@ class CustomerController extends Controller
     /**
      * Display the specified customer.
      */
-    /**
-
-    * Display the specified customer.
-    */
     public function show(Customer $customer)
     {
         $assignedOnus = $customer->assignedOnus()
@@ -146,8 +141,8 @@ class CustomerController extends Controller
     }
 
     /**
- * Remove the specified customer from storage.
- */
+     * Remove the specified customer from storage.
+     */
     public function destroy(Customer $customer)
     {
         try {
@@ -236,6 +231,53 @@ class CustomerController extends Controller
         }
     }
 
+    /**
+     * Generar PDF con listado de clientes
+     */
+    public function generatePDF()
+    {
+        // CORRECCIÓN: Usar assignedOnus en lugar de customerAssignments
+        $customers = Customer::with(['user', 'assignedOnus'])->get();
 
+        $data = [
+            'customers' => $customers,
+            'title' => 'Reporte de Clientes',
+            'date' => now()->format('d/m/Y H:i:s'),
+            'totalCustomers' => $customers->count(),
+            'residentialCustomers' => $customers->where('customer_type', 'residential')->count(),
+            'businessCustomers' => $customers->where('customer_type', 'business')->count(),
+            'corporateCustomers' => $customers->where('customer_type', 'corporate')->count(),
+            'customersWithOnus' => $customers->filter(function($customer) {
+                return $customer->assignedOnus->count() > 0;
+            })->count(),
+        ];
 
+        $pdf = PDF::loadView('customers.pdf', $data);
+        
+        return $pdf->download('reporte-clientes-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Vista previa del PDF (HTML)
+     */
+    public function previewPDF()
+    {
+        // CORRECCIÓN: Usar assignedOnus en lugar de customerAssignments
+        $customers = Customer::with(['user', 'assignedOnus'])->get();
+
+        $data = [
+            'customers' => $customers,
+            'title' => 'Reporte de Clientes',
+            'date' => now()->format('d/m/Y H:i:s'),
+            'totalCustomers' => $customers->count(),
+            'residentialCustomers' => $customers->where('customer_type', 'residential')->count(),
+            'businessCustomers' => $customers->where('customer_type', 'business')->count(),
+            'corporateCustomers' => $customers->where('customer_type', 'corporate')->count(),
+            'customersWithOnus' => $customers->filter(function($customer) {
+                return $customer->assignedOnus->count() > 0;
+            })->count(),
+        ];
+
+        return view('customers.pdf', $data);
+    }
 }
