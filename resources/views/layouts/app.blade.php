@@ -18,7 +18,7 @@
             font-size: .9rem;
         }
         .sidebar {
-            height: 115vh;
+            height: 155vh;
             background-color: #2217b8ff;
         }
         .sidebar .nav-link {
@@ -44,8 +44,8 @@
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar -->
-        <nav class="col-md-2 d-none d-md-block sidebar p-0">
-            <div class="position-relative h-100">
+        <nav class="col-md-2 d-none d-md-block sidebar p-1">
+            <div class="position-relative h-110">
                 <ul class="nav flex-column">
                     <li class="nav-item p-3 fw-bold text-white fs-5">
                         Codename FreeOLT
@@ -59,7 +59,8 @@
                     <li><a class="nav-link {{ request()->is('device-configs*') ? 'active' : '' }}" href="{{ route('device-configs.index') }}"><i class="bi bi-gear-fill"></i> Configuración</a></li>
                     <li><a class="nav-link {{ request()->is('change-history*') ? 'active' : '' }}" href="{{ route('change-history.index') }}"><i class="bi bi-clock-history"></i> Historial</a></li>
 
-                    <P>SUMMA DEV CONFIDENTIAL SOFTWARE, THIS SYSTEM MAY CONTAIN ERRORS OR INSTABILITIES, REPORT FAILURES TO THE DEVELOPMENT TEAM</P>
+                    
+                    
 
                 </ul>
 
@@ -86,6 +87,9 @@
                         </ul>
                     </li>
                 </ul>
+                <li class="nav-item p-3 fw-bold text-white fs-5">
+                        SUMMA DEV CONFIDENTIAL SOFTWARE, THIS SYSTEM MAY CONTAIN ERRORS OR INSTABILITIES, REPORT FAILURES TO THE DEVELOPMENT TEAM
+                    </li>
             </div>
         </nav>
 

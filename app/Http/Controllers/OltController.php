@@ -19,18 +19,25 @@ class OltController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name'=>'required|string|max:100',
-            'model'=>'nullable|string|max:50',
-            'vendor'=>'required|in:Huawei,ZTE,FiberHome,Other',
-            'management_ip' => 'required|ip|unique:olts,management_ip',
-            'location'=>'nullable|string|max:255',
-            'firmware'=>'nullable|string|max:50',
-            'status'=>'required|in:active,inactive',
-        ]);
-        $olt = Olt::create($validated);
-        if ($request->wantsJson()) return response()->json($olt,201);
-        return redirect()->route('olts.index')->with('success','OLT creada');
+    $validated = $request->validate([
+        'name' => 'required|string|max:100',
+        'model' => 'nullable|string|max:50',
+        'vendor' => 'required|in:Huawei,ZTE,FiberHome,Other',
+        'management_ip' => 'required|string|max:50|unique:olts,management_ip',
+        'location' => 'nullable|string|max:255',
+        'firmware' => 'nullable|string|max:50',
+        'status' => 'required|in:active,inactive',
+    ], [
+        'management_ip.unique' => '⚠️ La dirección IP ingresada ya está registrada en otra OLT.',
+    ]);
+
+    $olt = Olt::create($validated);
+
+    if ($request->wantsJson())
+        return response()->json($olt, 201);
+
+    return redirect()->route('olts.index')
+                     ->with('success', 'OLT creada correctamente');
     }
 
     public function show(Request $request, Olt $olt)
@@ -43,18 +50,25 @@ class OltController extends Controller
 
     public function update(Request $request, Olt $olt)
     {
-        $validated = $request->validate([
-            'name'=>'required|string|max:100',
-            'model'=>'nullable|string|max:50',
-            'vendor'=>'required|in:Huawei,ZTE,FiberHome,Other',
-            'management_ip' => 'required|ip|unique:olts,management_ip,' . $olt->id,
-            'location'=>'nullable|string|max:255',
-            'firmware'=>'nullable|string|max:50',
-            'status'=>'required|in:active,inactive',
-        ]);
-        $olt->update($validated);
-        if ($request->wantsJson()) return response()->json($olt);
-        return redirect()->route('olts.index')->with('success','OLT actualizada');
+    $validated = $request->validate([
+        'name' => 'required|string|max:100',
+        'model' => 'nullable|string|max:50',
+        'vendor' => 'required|in:Huawei,ZTE,FiberHome,Other',
+        'management_ip' => 'required|string|max:50|unique:olts,management_ip,' . $olt->id,
+        'location' => 'nullable|string|max:255',
+        'firmware' => 'nullable|string|max:50',
+        'status' => 'required|in:active,inactive',
+    ], [
+        'management_ip.unique' => '⚠️ La dirección IP ingresada ya está registrada en otra OLT.',
+    ]);
+
+    $olt->update($validated);
+
+    if ($request->wantsJson())
+        return response()->json($olt);
+
+    return redirect()->route('olts.index')
+                     ->with('success', 'OLT actualizada correctamente');
     }
 
     public function destroy(Request $request, Olt $olt)

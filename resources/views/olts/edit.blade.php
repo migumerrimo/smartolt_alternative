@@ -21,9 +21,12 @@
             @endforeach
         </select>
     </div>
-    <div class="mb-3">
-        <label>IP de Gestión</label>
-        <input type="text" name="management_ip" class="form-control" value="{{ $olt->management_ip }}" required>
+    <div class="form-group mb-3">
+        <label for="management_ip">Dirección IP de gestión</label>
+        <input type="text" name="management_ip" class="form-control" value="{{ old('management_ip', $olt->management_ip ?? '') }}" required>
+        @error('management_ip')
+            <div class="text-danger mt-1">{{ $message }}</div>
+        @enderror
     </div>
     <div class="mb-3">
         <label>Ubicación</label>
