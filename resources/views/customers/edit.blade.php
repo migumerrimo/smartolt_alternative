@@ -1,8 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+
+<!-- Sección principal: vista para editar los datos de un cliente existente -->
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Editar Cliente</h1>
+
+    <!-- Botones de navegación: volver al listado o ver detalles del cliente -->
     <div class="btn-toolbar mb-2 mb-md-0">
         <a href="{{ route('customers.index') }}" class="btn btn-secondary me-2">
             <i class="bi bi-arrow-left"></i> Volver
@@ -13,15 +17,19 @@
     </div>
 </div>
 
+<!-- Tarjeta principal del formulario de edición del cliente -->
 <div class="card">
     <div class="card-header">
         <i class="bi bi-person-gear"></i> Editar Información del Cliente
     </div>
     <div class="card-body">
+
+        <!-- Formulario para actualizar la información del cliente -->
         <form action="{{ route('customers.update', $customer) }}" method="POST">
             @csrf
             @method('PUT')
-            
+
+            <!-- Fila de nombre y correo electrónico -->
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="name" class="form-label">Nombre Completo *</label>
@@ -42,6 +50,7 @@
                 </div>
             </div>
 
+            <!-- Fila de teléfono y tipo de cliente -->
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="phone" class="form-label">Teléfono *</label>
@@ -66,6 +75,7 @@
                 </div>
             </div>
 
+            <!-- Campo de dirección del cliente -->
             <div class="mb-3">
                 <label for="address" class="form-label">Dirección *</label>
                 <textarea class="form-control @error('address') is-invalid @enderror" 
@@ -75,6 +85,7 @@
                 @enderror
             </div>
 
+            <!-- Campo opcional de número de documento -->
             <div class="mb-3">
                 <label for="document_number" class="form-label">Número de Documento</label>
                 <input type="text" class="form-control @error('document_number') is-invalid @enderror" 
@@ -84,6 +95,7 @@
                 @enderror
             </div>
 
+            <!-- Botones de acción: cancelar o actualizar el cliente -->
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <a href="{{ route('customers.show', $customer) }}" class="btn btn-secondary me-md-2">Cancelar</a>
                 <button type="submit" class="btn btn-primary">

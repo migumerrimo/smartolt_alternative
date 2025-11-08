@@ -1,8 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+
+<!-- Sección principal: vista para registrar un nuevo cliente -->
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Registrar Nuevo Cliente</h1>
+
+    <!-- Botón para regresar al listado de clientes -->
     <div class="btn-toolbar mb-2 mb-md-0">
         <a href="{{ route('customers.index') }}" class="btn btn-secondary">
             <i class="bi bi-arrow-left"></i> Volver
@@ -10,14 +14,18 @@
     </div>
 </div>
 
+<!-- Tarjeta principal del formulario de registro -->
 <div class="card">
     <div class="card-header">
         <i class="bi bi-person-plus"></i> Información del Cliente
     </div>
     <div class="card-body">
+
+        <!-- Formulario para crear un nuevo cliente -->
         <form action="{{ route('customers.store') }}" method="POST">
             @csrf
             
+            <!-- Fila de nombre y correo electrónico -->
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="name" class="form-label">Nombre Completo *</label>
@@ -38,6 +46,7 @@
                 </div>
             </div>
 
+            <!-- Fila de teléfono y tipo de cliente -->
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="phone" class="form-label">Teléfono *</label>
@@ -63,6 +72,7 @@
                 </div>
             </div>
 
+            <!-- Campo de dirección -->
             <div class="mb-3">
                 <label for="address" class="form-label">Dirección *</label>
                 <textarea class="form-control @error('address') is-invalid @enderror" 
@@ -72,6 +82,7 @@
                 @enderror
             </div>
 
+            <!-- Campo de número de documento -->
             <div class="mb-3">
                 <label for="document_number" class="form-label">Número de Documento</label>
                 <input type="text" class="form-control @error('document_number') is-invalid @enderror" 
@@ -81,6 +92,7 @@
                 @enderror
             </div>
 
+            <!-- Botones de acción del formulario -->
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <a href="{{ route('customers.index') }}" class="btn btn-secondary me-md-2">Cancelar</a>
                 <button type="submit" class="btn btn-primary">

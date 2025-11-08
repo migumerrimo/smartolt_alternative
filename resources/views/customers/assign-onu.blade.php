@@ -1,8 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+
+<!-- Sección principal: vista para asignar una ONU disponible a un cliente específico -->
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Asignar ONU a Cliente</h1>
+
+    <!-- Botón de retorno al perfil del cliente -->
     <div class="btn-toolbar mb-2 mb-md-0">
         <a href="{{ route('customers.show', $customer) }}" class="btn btn-secondary">
             <i class="bi bi-arrow-left"></i> Volver al Cliente
@@ -11,6 +15,7 @@
 </div>
 
 <div class="row">
+    <!-- Columna izquierda: formulario para asignar una ONU -->
     <div class="col-md-8">
         <div class="card">
             <div class="card-header">
@@ -18,9 +23,12 @@
             </div>
             <div class="card-body">
                 @if($availableOnus->count() > 0)
+
+                    <!-- Formulario de asignación de ONU al cliente -->
                     <form action="{{ route('customers.assign-onu.store', $customer) }}" method="POST">
                         @csrf
                         
+                        <!-- Selección de ONU disponible -->
                         <div class="mb-3">
                             <label for="onu_id" class="form-label">Seleccionar ONU *</label>
                             <select class="form-select @error('onu_id') is-invalid @enderror" 
@@ -37,6 +45,7 @@
                             @enderror
                         </div>
 
+                        <!-- Campo para definir costo mensual -->
                         <div class="mb-3">
                             <label for="monthly_cost" class="form-label">Costo Mensual ($) *</label>
                             <input type="number" step="0.01" min="0" 
@@ -48,6 +57,7 @@
                             @enderror
                         </div>
 
+                        <!-- Campo para notas adicionales sobre la asignación -->
                         <div class="mb-3">
                             <label for="notes" class="form-label">Notas (Opcional)</label>
                             <textarea class="form-control @error('notes') is-invalid @enderror" 
@@ -57,6 +67,7 @@
                             @enderror
                         </div>
 
+                        <!-- Botones de acción: cancelar o asignar -->
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a href="{{ route('customers.show', $customer) }}" class="btn btn-secondary me-md-2">Cancelar</a>
                             <button type="submit" class="btn btn-primary">
@@ -64,6 +75,8 @@
                             </button>
                         </div>
                     </form>
+
+                <!-- Mensaje cuando no hay ONUs disponibles -->
                 @else
                     <div class="text-center py-4">
                         <i class="bi bi-router display-4 text-muted"></i>
@@ -78,7 +91,10 @@
         </div>
     </div>
 
+    <!-- Columna derecha: información del cliente y estadísticas -->
     <div class="col-md-4">
+
+        <!-- Tarjeta con información del cliente -->
         <div class="card">
             <div class="card-header">
                 <i class="bi bi-person"></i> Información del Cliente
@@ -105,6 +121,7 @@
             </div>
         </div>
 
+        <!-- Tarjeta con el conteo de ONUs disponibles -->
         <div class="card mt-3">
             <div class="card-header">
                 <i class="bi bi-info-circle"></i> ONUs Disponibles

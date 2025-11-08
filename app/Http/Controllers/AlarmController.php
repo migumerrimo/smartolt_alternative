@@ -15,7 +15,7 @@ class AlarmController extends Controller
         $query = Alarm::with(['olt','onu'])
                     ->where('active', true);
 
-        // 🔍 FILTRO POR BÚSQUEDA DE TEXTO
+        //  FILTRO POR BÚSQUEDA DE TEXTO
         if ($request->has('search') && $request->search != '') {
             $searchTerm = $request->search;
             $query->where(function($q) use ($searchTerm) {
@@ -31,12 +31,12 @@ class AlarmController extends Controller
             });
         }
 
-        // 🎯 FILTRO POR SEVERIDAD
+        // FILTRO POR SEVERIDAD
         if ($request->has('severity') && $request->severity != 'all') {
             $query->where('severity', $request->severity);
         }
 
-        // 📡 FILTRO POR TIPO DE DISPOSITIVO
+        //  FILTRO POR TIPO DE DISPOSITIVO
         if ($request->has('device_type') && $request->device_type != 'all') {
             if ($request->device_type == 'olt') {
                 $query->whereNull('onu_id');
@@ -45,7 +45,7 @@ class AlarmController extends Controller
             }
         }
 
-        // 🕒 FILTRO POR FECHA
+        //  FILTRO POR FECHA
         if ($request->has('time_filter')) {
             switch ($request->time_filter) {
                 case '1h':
