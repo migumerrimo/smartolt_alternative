@@ -87,9 +87,7 @@
                         </ul>
                     </li>
                 </ul>
-                <li class="nav-item p-3 fw-bold text-white fs-5">
-                        SUMMA DEV CONFIDENTIAL SOFTWARE, THIS SYSTEM MAY CONTAIN ERRORS OR INSTABILITIES, REPORT FAILURES TO THE DEVELOPMENT TEAM
-                    </li>
+                <
             </div>
         </nav>
 
