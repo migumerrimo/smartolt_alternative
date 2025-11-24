@@ -83,3 +83,6 @@ Route::prefix('olt/telnet')->group(function () {
     Route::post('/vlan/create', [OltTelnetApiController::class, 'createVlan']);
     Route::post('/command', [OltTelnetApiController::class, 'runCommand']);
 });
+
+// Estado SSH OLT (ping TCP simple) - pública
+Route::get('olt/ssh/status', [DataController::class, 'oltSshStatus']);

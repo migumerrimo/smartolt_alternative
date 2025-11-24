@@ -8,6 +8,7 @@ use App\Models\Olt;
 use App\Models\Onu;
 use App\Models\Vlan;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 
 class DataController extends Controller
 {
@@ -71,5 +72,47 @@ class DataController extends Controller
             'total' => $users->count(),
             'data' => $users
         ]);
+    }
+
+    /**
+     * GET /api/olt/ssh/status
+     * Comprueba conectividad TCP hacia la OLT (primera OLT registrada o .env)
+     */
+    public function oltSshStatus(Request $request): JsonResponse
+    {
+        try {
+            $olt = Olt::first();
+            $host = $olt?->host ?? env('OLT_HOST', '127.0.0.1');
+            $port = (int) ($olt?->port ?? env('OLT_PORT', 23));
+            $timeout = 5;
+
+            $errNo = 0;
+            $errStr = '';
+            $fp = @fsockopen($host, $port, $errNo, $errStr, $timeout);
+
+            if ($fp) {
+                fclose($fp);
+                return response()->json([
+                    'connected' => true,
+                    'host' => $host,
+                    'port' => $port,
+                    'message' => "Conexión TCP exitosa a {$host}:{$port}"
+                ], 200);
+            }
+
+            return response()->json([
+                'connected' => false,
+                'host' => $host,
+                'port' => $port,
+                'message' => "No se pudo conectar a {$host}:{$port} - {$errStr} ({$errNo})"
+            ], 200);
+        } catch (\Throwable $e) {
+            // Logging para diagnóstico
+            \Log::error('oltSshStatus error: '.$e->getMessage(), ['exception' => $e]);
+            return response()->json([
+                'connected' => false,
+                'message' => 'Error interno comprobando estado SSH. Revisa storage/logs/laravel.log'
+            ], 500);
+        }
     }
 }
