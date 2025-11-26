@@ -144,6 +144,10 @@ Route::prefix('customers')->group(function () {
     Route::get('/report/preview', [CustomerController::class, 'previewPDF'])->name('customers.report.preview');
 });
 
+// Rutas para funcionalidad SSH de OLTs
+Route::get('/olts/{olt}/check-connection', [OltController::class, 'checkConnection'])->name('olts.check-connection');
+Route::post('/olts/{olt}/execute-command', [OltController::class, 'executeCommand'])->name('olts.execute-command');
+
 
 
 });
