@@ -16,6 +16,7 @@ use App\Http\Controllers\ChangeHistoryController;
 use App\Http\Controllers\DeviceConfigController;
 
 use App\Http\Controllers\Api\DataController;
+use App\Http\Controllers\OltSshApiController;
 
 
 /*
@@ -26,6 +27,10 @@ use App\Http\Controllers\Api\DataController;
 | Ejemplo: GET /api/users
 |--------------------------------------------------------------------------
 */
+Route::get('/olt/{id}/ssh/alarms', [OltSshApiController::class, 'alarms']);
+Route::get('/olt/{id}/ssh/onus', [OltSshApiController::class, 'onus']);
+Route::get('/olt/{id}/ssh/system', [OltSshApiController::class, 'system']);
+
 
 // Users
 Route::apiResource('users', UserController::class);
