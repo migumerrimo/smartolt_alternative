@@ -16,7 +16,7 @@ use App\Http\Controllers\ChangeHistoryController;
 use App\Http\Controllers\DeviceConfigController;
 
 use App\Http\Controllers\Api\DataController;
-use App\Http\Controllers\OltSshApiController;
+use App\Http\Controllers\Api\OltSshApiController;
 
 
 /*
@@ -87,4 +87,10 @@ Route::prefix('olt/telnet')->group(function () {
     Route::get('/alarms/active', [OltTelnetApiController::class, 'getAlarms']);
     Route::post('/vlan/create', [OltTelnetApiController::class, 'createVlan']);
     Route::post('/command', [OltTelnetApiController::class, 'runCommand']);
+});
+use App\Http\Controllers\OltSshVlanController;
+
+Route::prefix('olt/ssh/vlan')->group(function () {
+    Route::get('/{oltId}/list', [OltSshVlanController::class, 'listFromOlt']);
+    Route::post('/{oltId}/create', [OltSshVlanController::class, 'createOnOlt']);
 });

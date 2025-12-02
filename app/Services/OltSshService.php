@@ -3,26 +3,116 @@
 namespace App\Services;
 
 use phpseclib3\Net\SSH2;
+use Exception;
 
 class OltSshService
 {
-    public function connect($host, $username, $password, $port = 22)
+    protected $ssh;
+
+    public function __construct($ip, $port, $user, $pass)
     {
-        $ssh = new SSH2($host, $port);
+        $this->ssh = new SSH2($ip, $port);
 
-        if (!$ssh->login($username, $password)) {
-            return [
-                'success' => false,
-                'error'   => 'No se pudo iniciar sesión en la OLT'
-            ];
+        if (!$this->ssh->login($user, $pass)) {
+            throw new Exception("Error al conectar por SSH");
         }
-
-        return $ssh;
     }
 
-    public function run($ssh, $command)
+    public function getVlans()
     {
-        $ssh->write($command . "\n");
-        return $ssh->read();
+        // Ensure we are on a fresh prompt
+        $this->ssh->write("\r\n");
+        usleep(200000);
+
+        // Some Huawei MA5680T devices require entering enable and a specific
+        // variant of the command. Use 'enable' then 'display vlan all smart'.
+        $this->ssh->write("enable\r\n");
+        usleep(150000);
+        // Request all VLANs of type smart (adjust if you need other types)
+        $this->ssh->write("display vlan all smart\r\n");
+        // exit to close session (avoid save prompts)
+        $this->ssh->write("exit\r\n");
+        usleep(300000);
+
+        $output = $this->ssh->read();
+
+        return [
+            "status" => "success",
+            "raw" => $output
+        ];
+    }
+
+    /**
+     * Ejecuta un comando (o arreglo de comandos) y devuelve la salida cruda.
+     * @param string|array $cmd
+     * @return array
+     */
+    public function exec($cmd)
+    {
+        // Ensure prompt
+        $this->ssh->write("\r\n");
+        usleep(200000);
+
+        $output = '';
+
+        $isArray = is_array($cmd);
+        $commands = $isArray ? $cmd : [$cmd];
+
+        foreach ($commands as $c) {
+            $this->ssh->write($c . "\r\n");
+            // Give device some time to respond
+            usleep(200000);
+            // Read whatever the device returned after this command
+            $partial = $this->ssh->read();
+            $output .= $partial;
+        }
+
+        // If the last command was not an exit/quit, send an exit to close session
+        $last = trim(end($commands));
+        if (!in_array(strtolower($last), ['exit', 'quit'])) {
+            $this->ssh->write("exit\r\n");
+            usleep(200000);
+            $output .= $this->ssh->read();
+        }
+
+        // Drain any remaining output (read until stable)
+        $prevLen = 0;
+        $tries = 0;
+        while ($tries < 5) {
+            usleep(150000);
+            $chunk = $this->ssh->read();
+            if ($chunk === null || $chunk === '') {
+                $tries++;
+                continue;
+            }
+            $output .= $chunk;
+            if (strlen($output) === $prevLen) {
+                $tries++;
+            } else {
+                $prevLen = strlen($output);
+                $tries = 0;
+            }
+        }
+
+        return [
+            'status' => 'success',
+            'raw' => $output
+        ];
+    }
+
+    public function getAlarms()
+    {
+        // Comando genérico; ajusta según el fabricante/modelo si es necesario
+        return $this->exec('display alarm active');
+    }
+
+    public function listOnus()
+    {
+        return $this->exec('display onu all');
+    }
+
+    public function getSystem()
+    {
+        return $this->exec('display version');
     }
 }

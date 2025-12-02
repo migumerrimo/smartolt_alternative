@@ -1,65 +1,26 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Models\Olt;
 use App\Services\OltSshService;
-use Illuminate\Http\Request;
 
 class OltSshApiController extends Controller
 {
-    protected $ssh;
-
-    public function __construct(OltSshService $ssh)
-    {
-        $this->ssh = $ssh;
-    }
-
-    public function system($id)
+    public function listVlans($id)
     {
         $olt = Olt::findOrFail($id);
 
-        $ssh = $this->ssh->connect(
+        $ssh = new OltSshService(
             $olt->management_ip,
-            'root',
-            'admin123'
+            $olt->ssh_port,
+            $olt->ssh_username,
+            $olt->ssh_password
         );
 
-        if (!is_object($ssh)) {
-            return response()->json($ssh, 500);
-        }
+        $response = $ssh->getVlans();
 
-        // Comando real de Huawei
-        $output = $this->ssh->run($ssh, "display version");
-
-        return response()->json([
-            "success" => true,
-            "command" => "display version",
-            "response" => $output
-        ]);
-    }
-
-    public function alarms($id)
-    {
-        $olt = Olt::findOrFail($id);
-
-        $ssh = $this->ssh->connect(
-            $olt->management_ip,
-            'root',
-            'admin123'
-        );
-
-        if (!is_object($ssh)) {
-            return response()->json($ssh, 500);
-        }
-
-        // Comando para alarmas activas
-        $output = $this->ssh->run($ssh, "display alarm active");
-
-        return response()->json([
-            "success" => true,
-            "command" => "display alarm active",
-            "response" => $output
-        ]);
+        return response()->json($response);
     }
 }

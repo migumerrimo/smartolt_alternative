@@ -3,17 +3,57 @@
 @section('content')
 <h2>Configuración de VLANs</h2>
 <a href="{{ route('vlans.create') }}" class="btn btn-primary mb-3">Nueva VLAN</a>
+<a href="#" onclick="cargarVlansOlt()" class="btn btn-secondary mb-3">
+    Cargar VLANs desde OLT
+</a>
+
+<div id="oltVlans"></div>
+
+<script>
+function cargarVlansOlt() {
+    fetch('/api/olt/ssh/vlan/1/list')
+        .then(r => r.json())
+        .then(resp => {
+            if (!resp || resp.success !== true) {
+                document.getElementById('oltVlans').innerHTML = '<div class="alert alert-danger">No se pudieron obtener VLANs desde la OLT.</div>';
+                return;
+            }
+
+            const data = resp.data || [];
+            if (data.length === 0) {
+                document.getElementById('oltVlans').innerHTML = '<div class="alert alert-info">No se detectaron VLANs en la OLT.</div>';
+                return;
+            }
+
+            let html = '<h4>VLANs detectadas en la OLT</h4>';
+            html += '<table class="table table-sm table-bordered"><thead><tr>' +
+                    '<th>#</th><th>Tipo</th><th>Atributo</th><th>STND-Port</th><th>SERV-Port</th><th>VLAN-Con</th>' +
+                    '</tr></thead><tbody>';
+
+            data.forEach(v => {
+                html += `<tr>` +
+                        `<td>${v.number ?? ''}</td>` +
+                        `<td>${v.type ?? ''}</td>` +
+                        `<td>${v.attribute ?? ''}</td>` +
+                        `<td>${v.stnd_port_num ?? ''}</td>` +
+                        `<td>${v.serv_port_num ?? ''}</td>` +
+                        `<td>${v.vlan_con ?? ''}</td>` +
+                        `</tr>`;
+            });
+
+            html += '</tbody></table>';
+            document.getElementById('oltVlans').innerHTML = html;
+        })
+        .catch(err => {
+            console.error(err);
+            document.getElementById('oltVlans').innerHTML = '<div class="alert alert-danger">Error al conectar con la API.</div>';
+        });
+}
+</script>
 
 <table class="table table-striped">
     <thead>
-        <tr>
-            <th>ID</th>
-            <th>OLT</th>
-            <th>Número</th>
-            <th>Tipo</th>
-            <th>Descripción</th>
-            <th>Acciones</th>
-        </tr>
+       
     </thead>
     <tbody>
         @foreach($vlans as $vlan)
