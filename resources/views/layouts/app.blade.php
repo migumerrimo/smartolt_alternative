@@ -54,10 +54,13 @@
                     <li><a class="nav-link {{ request()->is('customers*') ? 'active' : '' }}" href="{{ route('customers.index') }}"><i class="bi bi-people-fill"></i> Clientes</a></li>
                     <li><a class="nav-link {{ request()->is('olts*') ? 'active' : '' }}" href="{{ route('olts.index') }}"><i class="bi bi-hdd-network-fill"></i> OLTs</a></li>
                     <li><a class="nav-link {{ request()->is('onus*') ? 'active' : '' }}" href="{{ route('onus.index') }}"><i class="bi bi-router-fill"></i> ONUs</a></li>
+                    <li><a class="nav-link {{ request()->is('vlans*') ? 'active' : '' }}" href="{{ route('vlans.index') }}"><i class="bi bi-diagram-3-fill"></i> VLANs</a></li>
                     <li><a class="nav-link {{ request()->is('telemetry*') ? 'active' : '' }}" href="{{ route('telemetry.index') }}"><i class="bi bi-graph-up-arrow"></i> Telemetría</a></li>
                     <li><a class="nav-link {{ request()->is('alarms*') ? 'active' : '' }}" href="{{ route('alarms.index') }}"><i class="bi bi-exclamation-triangle-fill"></i> Alertas</a></li>
+                    <li><a class="nav-link {{ request()->is('dba-profiles*') ? 'active' : '' }}" href="{{ route('dba-profiles.index') }}"><i class="bi bi-list-columns-reverse"></i> DBA Profiles</a></li>
                     <li><a class="nav-link {{ request()->is('device-configs*') ? 'active' : '' }}" href="{{ route('device-configs.index') }}"><i class="bi bi-gear-fill"></i> Configuración</a></li>
                     <li><a class="nav-link {{ request()->is('change-history*') ? 'active' : '' }}" href="{{ route('change-history.index') }}"><i class="bi bi-clock-history"></i> Historial</a></li>
+                    <li><a class="nav-link {{ request()->is('service-profiles*') ? 'active' : '' }}" href="{{ route('service-profiles.index') }}"><i class="bi bi-box-fill"></i> Service Profiles</a></li>
 
                     
                     
@@ -88,7 +91,7 @@
                     </li>
                 </ul>
                 <li class="nav-item p-3 fw-bold text-white fs-5">
-                        SUMMA DEV CONFIDENTIAL SOFTWARE, THIS SYSTEM MAY CONTAIN ERRORS OR INSTABILITIES, REPORT FAILURES TO THE DEVELOPMENT TEAM
+                        "FALTA COMENTARIO..."
                     </li>
             </div>
         </nav>

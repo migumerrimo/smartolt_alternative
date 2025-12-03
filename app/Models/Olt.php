@@ -18,4 +18,28 @@ class Olt extends Model
     ];
 
     public $timestamps = true;
+
+    /**
+     * ONUs connected to this OLT
+     */
+    public function onus()
+    {
+        return $this->hasMany(Onu::class, 'olt_id');
+    }
+
+    /**
+     * Alarms related to this OLT
+     */
+    public function alarms()
+    {
+        return $this->hasMany(Alarm::class, 'olt_id');
+    }
+
+    /**
+     * Telemetry measurements related to this OLT
+     */
+    public function telemetries()
+    {
+        return $this->hasMany(Telemetry::class, 'olt_id');
+    }
 }
