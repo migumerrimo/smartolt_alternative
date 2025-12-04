@@ -7,6 +7,7 @@ use App\Services\OltSshService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Vlan;
+use App\Helpers\ChangeLogger;
 
 class OltSshVlanController extends Controller
 {
@@ -213,6 +214,14 @@ class OltSshVlanController extends Controller
             } catch (\Exception $e) {
                 Log::error('Failed to persist VLAN record', ['error' => $e->getMessage()]);
             }
+        }
+
+        // Registrar en historial de cambios
+        try {
+            $cmds = implode(' | ', $commands);
+            ChangeLogger::log('OLT', $olt->name, "Creación de VLAN {$vlan}", $cmds, substr($raw,0,2000), $olt->id);
+        } catch (\Exception $e) {
+            Log::error('ChangeLogger failed', ['error' => $e->getMessage()]);
         }
 
         return response()->json([

@@ -16,9 +16,11 @@ class ServiceProfile extends Model
 
     protected $fillable = [
         'olt_id',
+        'profile_id',
         'name',
         'service',
         'eth_ports',
+        'binding_times',
         'vlan_id',
     ];
 

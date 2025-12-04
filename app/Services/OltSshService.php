@@ -115,4 +115,25 @@ class OltSshService
     {
         return $this->exec('display version');
     }
+
+    /**
+     * Obtiene los Service Profiles de la OLT (MA5680T)
+     * Ejecuta: enable + display ont-srvprofile gpon all
+     */
+    public function getServiceProfiles()
+    {
+        $this->ssh->write("\r\n");
+        usleep(200000);
+        $this->ssh->write("enable\r\n");
+        usleep(150000);
+        $this->ssh->write("display ont-srvprofile gpon all\r\n");
+        usleep(300000);
+        $this->ssh->write("exit\r\n");
+        usleep(300000);
+        $output = $this->ssh->read();
+        return [
+            'status' => 'success',
+            'raw' => $output
+        ];
+    }
 }

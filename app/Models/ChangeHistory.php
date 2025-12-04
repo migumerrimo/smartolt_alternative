@@ -17,6 +17,7 @@ class ChangeHistory extends Model
         'user_id',
         'olt_id',
         'device_type',
+        'entity_type',
         'device_name',
         'command',
         'result',

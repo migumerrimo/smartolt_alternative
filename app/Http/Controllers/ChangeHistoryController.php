@@ -6,6 +6,9 @@ use App\Models\ChangeHistory;
 use App\Models\User;
 use App\Models\Olt;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use Carbon\Carbon;
 
 class ChangeHistoryController extends Controller
 {
@@ -44,6 +47,55 @@ class ChangeHistoryController extends Controller
         // Si se pide JSON, devolvemos los datos en formato API
         if ($request->wantsJson()) {
             return response()->json($changes);
+        }
+
+        // Si no hay entradas en la BD, usamos el fichero JSONL como fallback
+        if ($changes->total() == 0) {
+            $path = storage_path('logs/change_history.log');
+            $items = [];
+            if (file_exists($path)) {
+                $lines = array_filter(array_map('trim', file($path)));
+                // leemos las últimas 100 entradas (invertimos para tener más recientes primero)
+                $lines = array_reverse($lines);
+                $lines = array_slice($lines, 0, 200);
+
+                foreach ($lines as $line) {
+                    $data = json_decode($line, true);
+                    if (!$data) continue;
+                    $user = null;
+                    if (!empty($data['user_id'])) {
+                        $userModel = User::find($data['user_id']);
+                        $user = (object)['name' => $userModel ? $userModel->name : ('Usuario ' . $data['user_id'])];
+                    } else {
+                        $user = (object)['name' => 'Sistema'];
+                    }
+
+                    $item = (object)[];
+                    $item->id = null;
+                    $item->user = $user;
+                    $item->device_name = $data['device_name'] ?? null;
+                    $item->device_type = $data['device_type'] ?? null;
+                    $item->entity_type = $data['entity_type'] ?? null;
+                    $item->description = $data['description'] ?? null;
+                    $item->command = $data['command'] ?? null;
+                    $item->result = $data['result'] ?? null;
+                    $item->date = isset($data['date']) ? Carbon::parse($data['date']) : Carbon::now();
+                    $items[] = $item;
+                }
+            }
+
+            // Paginador manual
+            $perPage = 20;
+            $page = $request->get('page', 1);
+            $total = count($items);
+            $offset = ($page - 1) * $perPage;
+            $sliced = array_slice($items, $offset, $perPage);
+            $paginator = new LengthAwarePaginator($sliced, $total, $perPage, $page, [
+                'path' => $request->url(),
+                'query' => $request->query()
+            ]);
+
+            $changes = $paginator;
         }
 
         // 🔹 Retornamos la vista principal con los datos

@@ -72,6 +72,7 @@
                             <th>Usuario</th>
                             <th>Dispositivo</th>
                             <th>Tipo</th>
+                            <th>Entidad</th>
                             <th>Descripción</th>
                             <th>Comando Ejecutado</th>
                             <th>Resultado</th>
@@ -95,6 +96,7 @@
                             <td>{{ $change->user->name ?? 'Sistema' }}</td>
                             <td>{{ $change->device_name ?? 'N/A' }}</td>
                             <td>{{ $change->device_type }}</td>
+                            <td>{{ $change->entity_type ?? '-' }}</td>
                             <td>{{ Str::limit($change->description, 60) }}</td>
                             <td>
                                 @if($change->command)
