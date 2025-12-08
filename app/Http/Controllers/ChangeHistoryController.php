@@ -38,64 +38,88 @@ class ChangeHistoryController extends Controller
             $query->where('user_id', $request->user_id);
         }
 
-        // 📊 Ordenamos por fecha descendente y paginamos
-        $changes = $query->orderByDesc('date')->paginate(20);
-
         // 📋 Obtenemos todos los usuarios para el combobox
         $users = User::all();
+
+        // Obtenemos los registros de BD (sin paginar aún)
+        $dbChanges = $query->orderByDesc('date')->get();
+
+        // Construimos entradas desde fichero JSONL siempre, para mezclar con BD
+        $fileItems = [];
+        $path = storage_path('logs/change_history.log');
+        if (file_exists($path)) {
+            $lines = array_filter(array_map('trim', file($path)));
+            // leemos las últimas 300 (invertimos para tener más recientes primero)
+            $lines = array_reverse($lines);
+            $lines = array_slice($lines, 0, 300);
+
+            foreach ($lines as $line) {
+                $data = json_decode($line, true);
+                if (!$data) continue;
+
+                // Aplicamos filtros básicos también al log de fichero
+                if ($request->filled('device_type') && ($data['device_type'] ?? '') !== $request->device_type) {
+                    continue;
+                }
+                if ($request->filled('user_id')) {
+                    $uid = $data['user_id'] ?? null;
+                    if ((string)$uid !== (string)$request->user_id) {
+                        continue;
+                    }
+                }
+                if ($request->filled('search')) {
+                    $hay = strtolower($request->search);
+                    $haystack = strtolower(($data['device_name'] ?? '') . ' ' . ($data['description'] ?? '') . ' ' . ($data['command'] ?? '') . ' ' . ($data['result'] ?? ''));
+                    if (strpos($haystack, $hay) === false) {
+                        continue;
+                    }
+                }
+
+                $userObj = (object) ['name' => 'Sistema'];
+                if (!empty($data['user_id'])) {
+                    $userModel = User::find($data['user_id']);
+                    $userObj = (object) ['name' => $userModel ? $userModel->name : ('Usuario ' . $data['user_id'])];
+                }
+
+                $item = (object)[];
+                $item->id = null;
+                $item->user = $userObj;
+                $item->device_name = $data['device_name'] ?? null;
+                $item->device_type = $data['device_type'] ?? null;
+                $item->entity_type = $data['entity_type'] ?? null;
+                $item->description = $data['description'] ?? null;
+                $item->command = $data['command'] ?? null;
+                $item->result = $data['result'] ?? null;
+                $item->date = isset($data['date']) ? Carbon::parse($data['date']) : Carbon::now();
+                $item->source = 'file';
+                $item->user_id = $data['user_id'] ?? null;
+                $fileItems[] = $item;
+            }
+        }
+
+        // Normalizamos registros de BD a incluir campo 'source'
+        $dbChanges->each(function ($c) {
+            $c->source = 'db';
+        });
+
+        // Mezclamos BD + fichero y ordenamos por fecha desc
+        $merged = collect($dbChanges)->merge($fileItems)->sortByDesc(function ($item) {
+            return $item->date instanceof Carbon ? $item->date : Carbon::parse($item->date);
+        })->values();
+
+        // Paginación manual del merge
+        $perPage = 20;
+        $page = $request->get('page', 1);
+        $total = $merged->count();
+        $sliced = $merged->slice(($page - 1) * $perPage, $perPage)->all();
+        $changes = new LengthAwarePaginator($sliced, $total, $perPage, $page, [
+            'path' => $request->url(),
+            'query' => $request->query()
+        ]);
 
         // Si se pide JSON, devolvemos los datos en formato API
         if ($request->wantsJson()) {
             return response()->json($changes);
-        }
-
-        // Si no hay entradas en la BD, usamos el fichero JSONL como fallback
-        if ($changes->total() == 0) {
-            $path = storage_path('logs/change_history.log');
-            $items = [];
-            if (file_exists($path)) {
-                $lines = array_filter(array_map('trim', file($path)));
-                // leemos las últimas 100 entradas (invertimos para tener más recientes primero)
-                $lines = array_reverse($lines);
-                $lines = array_slice($lines, 0, 200);
-
-                foreach ($lines as $line) {
-                    $data = json_decode($line, true);
-                    if (!$data) continue;
-                    $user = null;
-                    if (!empty($data['user_id'])) {
-                        $userModel = User::find($data['user_id']);
-                        $user = (object)['name' => $userModel ? $userModel->name : ('Usuario ' . $data['user_id'])];
-                    } else {
-                        $user = (object)['name' => 'Sistema'];
-                    }
-
-                    $item = (object)[];
-                    $item->id = null;
-                    $item->user = $user;
-                    $item->device_name = $data['device_name'] ?? null;
-                    $item->device_type = $data['device_type'] ?? null;
-                    $item->entity_type = $data['entity_type'] ?? null;
-                    $item->description = $data['description'] ?? null;
-                    $item->command = $data['command'] ?? null;
-                    $item->result = $data['result'] ?? null;
-                    $item->date = isset($data['date']) ? Carbon::parse($data['date']) : Carbon::now();
-                    $items[] = $item;
-                }
-            }
-
-            // Paginador manual
-            $perPage = 20;
-            $page = $request->get('page', 1);
-            $total = count($items);
-            $offset = ($page - 1) * $perPage;
-            $sliced = array_slice($items, $offset, $perPage);
-            $paginator = new LengthAwarePaginator($sliced, $total, $perPage, $page, [
-                'path' => $request->url(),
-                'query' => $request->query()
-            ]);
-
-            $changes = $paginator;
         }
 
         // 🔹 Retornamos la vista principal con los datos

@@ -17,7 +17,13 @@ class DbaProfile extends Model
     protected $fillable = [
         'olt_id',
         'name',
+        'profile_id',
         'type',
+        'bandwidth_compensation',
+        'fix_kbps',
+        'assure_kbps',
+        'max_kbps',
+        'bind_times',
         'max_bandwidth',
     ];
 

@@ -90,6 +90,7 @@ Route::prefix('olt/telnet')->group(function () {
 });
 use App\Http\Controllers\OltSshVlanController;
 use App\Http\Controllers\OltSshServiceProfileController;
+use App\Http\Controllers\OltSshDbaProfileController;
 
 Route::prefix('olt/ssh/vlan')->group(function () {
     Route::get('/{oltId}/list', [OltSshVlanController::class, 'listFromOlt']);
@@ -99,4 +100,9 @@ Route::prefix('olt/ssh/vlan')->group(function () {
 Route::prefix('olt/ssh/service-profile')->group(function () {
     Route::get('/{oltId}/list', [OltSshServiceProfileController::class, 'listFromOlt']);
     Route::post('/{oltId}/create', [OltSshServiceProfileController::class, 'createOnOlt']);
+});
+
+Route::prefix('olt/ssh/dba-profile')->group(function () {
+    Route::get('/{oltId}/list', [OltSshDbaProfileController::class, 'listFromOlt']);
+    Route::post('/{oltId}/create', [OltSshDbaProfileController::class, 'createOnOlt']);
 });

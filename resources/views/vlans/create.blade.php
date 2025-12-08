@@ -3,38 +3,7 @@
 @section('content')
 <h2>Nueva VLAN</h2>
 
-<form action="{{ route('vlans.store') }}" method="POST">
-    @csrf
-    <div class="mb-3">
-        <label>OLT</label>
-        <select name="olt_id" class="form-select" required>
-            @foreach($olts as $olt)
-                <option value="{{ $olt->id }}">{{ $olt->name }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="mb-3">
-        <label>Número</label>
-        <input type="number" name="number" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label>Tipo</label>
-        <select name="type" class="form-select">
-            <option value="standard">Standard</option>
-            <option value="smart">Smart</option>
-            <option value="mux">Mux</option>
-            <option value="super">Super</option>
-        </select>
-    </div>
-    <div class="mb-3">
-        <label>Descripción</label>
-        <input type="text" name="description" class="form-control">
-    </div>
-    <button class="btn btn-success">Guardar</button>
-</form>
-
-    <hr />
-    <h4>Crear VLAN directamente en la OLT</h4>
+<h4>Crear VLAN directamente en la OLT</h4>
     <div id="createResult"></div>
     <form id="createVlanForm" onsubmit="return crearVlan(event)">
         <div class="form-row">
@@ -77,7 +46,7 @@
                 <input type="text" id="vlanifNetmask" class="form-control" value="255.255.255.0" />
             </div>
             <div class="form-group col-md-2 align-self-end">
-                <button class="btn btn-success">Crear en OLT</button>
+                <button type="submit" class="btn btn-success">Crear en OLT</button>
             </div>
         </div>
     </form>
@@ -95,8 +64,7 @@
             native_port: document.getElementById('nativePort').value,
             native_vlan: document.getElementById('nativeVlan').value ? parseInt(document.getElementById('nativeVlan').value, 10) : null,
             vlanif_ip: document.getElementById('vlanifIp').value,
-            vlanif_netmask: document.getElementById('vlanifNetmask').value,
-            description: document.querySelector('input[name="description"]').value || null
+            vlanif_netmask: document.getElementById('vlanifNetmask').value
         };
 
         fetch(`/api/olt/ssh/vlan/${oltId}/create`, {

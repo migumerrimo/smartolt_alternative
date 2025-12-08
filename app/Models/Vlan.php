@@ -20,6 +20,11 @@ class Vlan extends Model
         'type',
         'description',
         'uplink_port',
+        'port_mode',
+        'native_port',
+        'native_vlan',
+        'vlanif_ip',
+        'vlanif_netmask',
     ];
 
     protected $casts = [

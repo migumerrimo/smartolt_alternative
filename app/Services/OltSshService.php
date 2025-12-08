@@ -136,4 +136,25 @@ class OltSshService
             'raw' => $output
         ];
     }
+
+    /**
+     * Obtiene los DBA Profiles de la OLT (MA5680T)
+     * Ejecuta: enable + display dba-profile all
+     */
+    public function getDbaProfiles()
+    {
+        $this->ssh->write("\r\n");
+        usleep(200000);
+        $this->ssh->write("enable\r\n");
+        usleep(150000);
+        $this->ssh->write("display dba-profile all\r\n");
+        usleep(300000);
+        $this->ssh->write("exit\r\n");
+        usleep(300000);
+        $output = $this->ssh->read();
+        return [
+            'status' => 'success',
+            'raw' => $output
+        ];
+    }
 }

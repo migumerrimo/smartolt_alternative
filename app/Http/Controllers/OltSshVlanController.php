@@ -201,14 +201,19 @@ class OltSshVlanController extends Controller
         }
 
         if (!$isError) {
-            // Persist VLAN in DB (upsert)
+            // Persist VLAN in DB (upsert) using the same params used to create on OLT
             try {
                 $vlanModel = Vlan::updateOrCreate(
                     ['olt_id' => $olt->id, 'number' => $vlan],
                     [
                         'type' => $type,
                         'description' => $request->input('description'),
-                        'uplink_port' => $request->input('ports')
+                        'uplink_port' => $request->input('ports'),
+                        'port_mode' => $request->input('port_mode'),
+                        'native_port' => $request->input('native_port'),
+                        'native_vlan' => $request->input('native_vlan'),
+                        'vlanif_ip' => $request->input('vlanif_ip'),
+                        'vlanif_netmask' => $request->input('vlanif_netmask')
                     ]
                 );
             } catch (\Exception $e) {
