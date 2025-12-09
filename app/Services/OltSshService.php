@@ -49,6 +49,11 @@ class OltSshService
      */
     public function exec($cmd)
     {
+        // Allow long-running SSH operations to finish without PHP timeout
+        if (function_exists('set_time_limit')) {
+            @set_time_limit(0);
+        }
+
         // Ensure prompt
         $this->ssh->write("\r\n");
         usleep(200000);

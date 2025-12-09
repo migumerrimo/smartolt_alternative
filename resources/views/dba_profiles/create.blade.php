@@ -108,10 +108,17 @@ document.getElementById('createDbaProfileForm').addEventListener('submit', async
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             body: JSON.stringify(payload)
         });
+
+        // Verificar si la respuesta es JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            throw new Error('El servidor no devolvió JSON. Revisa los logs del servidor.');
+        }
 
         const data = await response.json();
 
@@ -127,7 +134,7 @@ document.getElementById('createDbaProfileForm').addEventListener('submit', async
             alertDiv.innerHTML = '<strong>¡Éxito!</strong> ' + data.message;
         } else {
             alertDiv.className = 'alert alert-danger';
-            alertDiv.innerHTML = '<strong>Error:</strong> ' + data.message;
+            alertDiv.innerHTML = '<strong>Error:</strong> ' + (data.message || data.error || 'Error desconocido');
         }
 
         outputPre.textContent = data.olt_output || 'Sin salida';
@@ -138,6 +145,7 @@ document.getElementById('createDbaProfileForm').addEventListener('submit', async
         resultDiv.style.display = 'block';
         alertDiv.className = 'alert alert-danger';
         alertDiv.innerHTML = '<strong>Error de red:</strong> ' + error.message;
+        console.error('Error completo:', error);
     }
 });
 </script>

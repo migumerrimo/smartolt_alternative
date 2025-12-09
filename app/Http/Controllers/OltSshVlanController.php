@@ -159,19 +159,24 @@ class OltSshVlanController extends Controller
         $commands[] = "vlan {$vlan} {$type}";
 
         // assign ports to vlan if provided
+        // Formato correcto Huawei: port vlan VLAN_ID SLOT/PORT PORT_LIST
         if ($request->filled('ports')) {
-            // ports can be space- or comma-separated
+            // ports puede ser "0/7" o "0/7 0/8" - cada uno es un slot/port diferente
             $ports = preg_split('/[\s,]+/', trim($request->ports));
-            $portMode = $request->input('port_mode');
-            foreach ($ports as $p) {
-                if ($p === '') continue;
-                $cmd = "port vlan {$vlan} {$p}";
-                if ($portMode) $cmd .= " {$portMode}"; // e.g. '2' per example image
-                $commands[] = $cmd;
+            $portMode = $request->input('port_mode', '1'); // default tag mode 1
+            
+            foreach ($ports as $slotPort) {
+                if ($slotPort === '') continue;
+                // slotPort es algo como "0/7"
+                // El tercer parámetro es la lista de puertos en ese slot (ej: 1 o 0,1,4-5)
+                // Por defecto usamos "1" (puerto 1)
+                $portList = $portMode ?: '1';
+                $commands[] = "port vlan {$vlan} {$slotPort} {$portList}";
             }
         }
 
         // native vlan on a specific port (interface scu)
+        // IMPORTANTE: Solo si el puerto ya está en la VLAN
         if ($request->filled('native_port') && $request->filled('native_vlan')) {
             $nativePort = $request->native_port;
             $nativeVlan = $request->native_vlan;
@@ -196,7 +201,7 @@ class OltSshVlanController extends Controller
 
         // Determine success: if raw output contains common error markers, treat as failure
         $isError = false;
-        if (preg_match('/(Error:|%\s+Unknown|Unknown command|Error\s)/i', $raw)) {
+        if (preg_match('/(Error:|Failure:|%\s+Unknown|Unknown command|Error\s|conflicts)/i', $raw)) {
             $isError = true;
         }
 
