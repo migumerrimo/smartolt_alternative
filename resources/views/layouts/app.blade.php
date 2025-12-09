@@ -90,9 +90,6 @@
                         </ul>
                     </li>
                 </ul>
-                <li class="nav-item p-3 fw-bold text-white fs-5">
-                        "FALTA COMENTARIO..."
-                    </li>
             </div>
         </nav>
 
