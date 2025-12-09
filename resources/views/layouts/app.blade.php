@@ -19,7 +19,7 @@
         }
         .sidebar {
             height: 155vh;
-            background-color: #13a513ff;
+            background-color: #00C853;
         }
         .sidebar .nav-link {
             color: #fff;
