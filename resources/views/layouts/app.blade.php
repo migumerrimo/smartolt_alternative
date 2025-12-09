@@ -38,6 +38,26 @@
             font-size: .8rem;
             color: #fff;
         }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 0.5rem;
+            gap: 0.5rem;
+            flex-direction: column;
+        }
+        .logo-container img {
+            height: 80px;
+            width: auto;
+            object-fit: contain;
+        }
+        .logo-text {
+            font-weight: bold;
+            color: #fff;
+            font-size: 0.85rem;
+            line-height: 1.3;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -46,10 +66,14 @@
         <!-- Sidebar -->
         <nav class="col-md-2 d-none d-md-block sidebar p-1">
             <div class="position-relative h-110">
+                <!-- Logo y nombre -->
+                <div class="logo-container">
+                    <img src="{{ asset('images/intersanpablo-logo.png') }}" alt="INTERSANPABLO" />
+                    <div class="logo-text">
+                    </div>
+                </div>
+
                 <ul class="nav flex-column">
-                    <li class="nav-item p-3 fw-bold text-white fs-5">
-                        Codename FreeOLT
-                    </li>
                     <li><a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ route('dashboard') }}"><i class="bi bi-house-fill"></i> Dashboard</a></li>
                     <li><a class="nav-link {{ request()->is('customers*') ? 'active' : '' }}" href="{{ route('customers.index') }}"><i class="bi bi-people-fill"></i> Clientes</a></li>
                     <li><a class="nav-link {{ request()->is('olts*') ? 'active' : '' }}" href="{{ route('olts.index') }}"><i class="bi bi-hdd-network-fill"></i> OLTs</a></li>
@@ -61,10 +85,6 @@
                     <li><a class="nav-link {{ request()->is('device-configs*') ? 'active' : '' }}" href="{{ route('device-configs.index') }}"><i class="bi bi-gear-fill"></i> Configuración</a></li>
                     <li><a class="nav-link {{ request()->is('change-history*') ? 'active' : '' }}" href="{{ route('change-history.index') }}"><i class="bi bi-clock-history"></i> Historial</a></li>
                     <li><a class="nav-link {{ request()->is('service-profiles*') ? 'active' : '' }}" href="{{ route('service-profiles.index') }}"><i class="bi bi-box-fill"></i> Service Profiles</a></li>
-
-                    
-                    
-
                 </ul>
 
                 <ul class="navbar-nav">
