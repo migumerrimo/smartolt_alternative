@@ -225,12 +225,12 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('performance.metrics') }}" class="btn btn-primary btn-lg px-5">
+                        <a href="{{ route('performance.metrics') }}" class="btn btn-custom-green btn-lg px-5">
                             <i class="fas fa-arrow-right me-2"></i>
                             Acceder al Panel de Rendimiento
                         </a>
                         
-                        
+                            
                     </div>
                 </div>
             </div>
@@ -253,7 +253,7 @@
     font-weight: bold;
 }
 .bg-gradient-info {
-    background: linear-gradient(135deg, #17a2b8 0%, #0d2ec5ff 100%);
+    background: linear-gradient(135deg, #97eb9bff 0%, #0dc51cff 100%);
 }
 .feature-item {
     padding: 1rem;
@@ -266,6 +266,16 @@
 }
 .shadow-lg {
     box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+.btn-custom-green {
+    background-color: #00C853;
+    border-color: #00C853;
+    color: #fff;
+}
+.btn-custom-green:hover {
+    background-color: #009b3a;
+    border-color: #009b3a;
+    color: #fff;
 }
 </style>
 @endsection
