@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container">
-    <h2>Crear Perfil DBA en OLT</h2>
+    <h2>Ingresa los datos solicitados en los campos</h2>
 
     <!-- Tarjeta para crear DBA Profile directamente en la OLT -->
     <div class="card mb-4">
