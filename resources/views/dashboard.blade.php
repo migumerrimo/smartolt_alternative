@@ -253,7 +253,7 @@
     font-weight: bold;
 }
 .bg-gradient-info {
-    background: linear-gradient(135deg, #97eb9bff 0%, #0dc51cff 100%);
+    background: linear-gradient(135deg, #0DC51CFF 0%, #0dc51cff 100%);
 }
 .feature-item {
     padding: 1rem;

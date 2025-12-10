@@ -2,8 +2,8 @@
 
 @section('content')
 <h2>Configuración de VLANs</h2>
-<a href="{{ route('vlans.create') }}" class="btn btn-primary mb-3">Nueva VLAN</a>
-<a href="#" onclick="cargarVlansOlt()" class="btn btn-secondary mb-3">
+<a href="{{ route('vlans.create') }}" class="btn btn-vlan-new mb-3">Nueva VLAN</a>
+<a href="#" onclick="cargarVlansOlt()" class="btn btn-vlan-load mb-3">
     Cargar VLANs desde OLT
 </a>
 
@@ -76,3 +76,43 @@ function cargarVlansOlt() {
     </tbody>
 </table>
 @endsection
+
+<style>
+/* estilo para asegurar que se vea sobre Bootstrap */
+.btn-vlan-new {
+    display: inline-block;
+    background-color: #2ecc71 !important; /* verde claro */
+    border-color: #2ecc71 !important;
+    color: #fff !important;
+    padding: .5rem .75rem;
+    border-radius: .375rem;
+    box-shadow: none;
+    text-decoration: none;
+}
+.btn-vlan-new:hover {
+    background-color: #28c567 !important;
+    border-color: #28c567 !important;
+    color: #fff !important;
+}
+
+.btn-vlan-load {
+    display: inline-block;
+    background-color: #16a085 !important; /* tono teal distinto */
+    border-color: #16a085 !important;
+    color: #fff !important;
+    padding: .5rem .75rem;
+    border-radius: .375rem;
+    box-shadow: none;
+    text-decoration: none;
+}
+.btn-vlan-load:hover {
+    background-color: #12806f !important;
+    border-color: #12806f !important;
+    color: #fff !important;
+}
+
+/* opcional: si quieres que se parezcan más a .btn de Bootstrap */
+.btn-vlan-new, .btn-vlan-load {
+    line-height: 1.5;
+}
+</style>

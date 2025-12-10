@@ -45,10 +45,10 @@
 
                 <!-- Botones -->
                 <div class="col-12 d-flex justify-content-end">
-                    <button class="btn btn-primary me-2">
+                    <button class="btn btn-ch-search me-2">
                         <i class="bi bi-search"></i> Buscar
                     </button>
-                    <a href="{{ route('change-history.index') }}" class="btn btn-secondary">
+                    <a href="{{ route('change-history.index') }}" class="btn btn-ch-clear">
                         <i class="bi bi-x-circle"></i> Limpiar
                     </a>
                 </div>
@@ -127,3 +127,31 @@
     </div>
 </div>
 @endsection
+
+<style>
+/* botones personalizados para Historial de Cambios (mayor especificidad) */
+button.btn-ch-search {
+    background-color: #23d70bff !important; /* azul principal */
+    border-color: #3bd70bff !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+button.btn-ch-search:hover {
+    background-color: #094bb5 !important;
+    border-color: #094bb5 !important;
+    color: #fff !important;
+}
+
+a.btn-ch-clear {
+    background-color: #6c757d !important; /* gris distinto */
+    border-color: #6c757d !important;
+    color: #fff !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+a.btn-ch-clear:hover {
+    background-color: #5a6268 !important;
+    border-color: #5a6268 !important;
+    color: #fff !important;
+}
+</style>

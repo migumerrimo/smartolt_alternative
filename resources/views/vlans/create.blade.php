@@ -5,8 +5,8 @@
     <h2>Nueva VLAN</h2>
 
     <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h5>Crear VLAN directamente en la OLT</h5>
+        <div class="card-header bg-vlan-create text-white">
+            <h5>Crear VLAN en la OLT</h5>
         </div>
         <div class="card-body">
             <div id="createResult" class="mb-3"></div>
@@ -87,7 +87,7 @@
                     </code>
                 </div>
 
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-vlan-submit">
                     <i class="bi bi-plus-circle"></i> Crear VLAN en OLT
                 </button>
                 <a href="{{ route('vlans.index') }}" class="btn btn-secondary">Cancelar</a>
@@ -95,6 +95,27 @@
         </div>
     </div>
 </div>
+
+<style>
+/* Color personalizado para card header de crear VLAN */
+.bg-vlan-create {
+    background-color: #03c524ff !important;
+    border-color: #6f42c1 !important;
+}
+
+/* Botón de envío con color coordinado */
+.btn-vlan-submit {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+.btn-vlan-submit:hover {
+    background-color: #218838 !important;
+    border-color: #218838 !important;
+    color: #fff !important;
+}
+</style>
 
 <script>
 function crearVlan(e) {

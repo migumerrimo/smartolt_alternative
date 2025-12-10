@@ -93,7 +93,7 @@
                 <!-- Botones de acción -->
                 <div class="col-md-2 d-flex align-items-end">
                     <div class="btn-group w-100">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-filter">
                             <i class="bi bi-search"></i> Filtrar
                         </button>
                         <a href="{{ route('alarms.index') }}" class="btn btn-outline-secondary">
@@ -227,3 +227,18 @@
     </div>
 </div>
 @endsection
+
+<style>
+/* botón de filtro con tonalidad personalizada (más específico para sobreescribir Bootstrap) */
+button.btn-filter {
+    background-color: #2dd70bff !important; /* tono azul ligeramente distinto */
+    border-color: #2dd70bff !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+button.btn-filter:hover {
+    background-color: #094bb5 !important;
+    border-color: #094bb5 !important;
+    color: #fff !important;
+}
+</style>

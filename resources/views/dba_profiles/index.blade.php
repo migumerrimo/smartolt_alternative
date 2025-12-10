@@ -23,7 +23,7 @@
                         @endforeach
                     </select>
                 </div>
-                <button type="submit" name="fetch_from_olt" value="1" class="btn btn-primary">
+                <button type="submit" name="fetch_from_olt" value="1" class="btn btn-dba-olt">
                     Obtener del OLT
                 </button>
             </form>
@@ -75,7 +75,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5>Perfiles DBA en Base de Datos</h5>
-            <a href="{{ route('dba-profiles.create') }}" class="btn btn-primary btn-sm">Nuevo Perfil DBA</a>
+            <a href="{{ route('dba-profiles.create') }}" class="btn btn-dba-new btn-sm">Nuevo Perfil DBA</a>
         </div>
         <div class="card-body">
             @if($dbaProfiles->count() > 0)
@@ -126,3 +126,27 @@
 </div>
 
 @endsection
+
+<style>
+.btn.btn-dba-olt {
+    background-color: #20c93cff !important; 
+    border-color: #20c997 !important;
+    color: #fff !important;
+}
+.btn.btn-dba-olt:hover {
+    background-color: #198754 !important;
+    border-color: #198754 !important;
+    color: #fff !important;
+}
+
+.btn.btn-dba-new {
+    background-color: #20c93cff !important; 
+    border-color: #0d6efd !important;
+    color: #fff !important;
+}
+.btn.btn-dba-new:hover {
+    background-color: #055ec2 !important;
+    border-color: #055ec2 !important;
+    color: #fff !important;
+}
+</style>

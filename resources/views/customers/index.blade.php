@@ -187,7 +187,7 @@
                 <i class="bi bi-people display-1 text-muted"></i>
                 <h4 class="text-muted">No hay clientes registrados</h4>
                 <p class="text-muted">Comienza agregando tu primer cliente al sistema.</p>
-                <a href="{{ route('customers.create') }}" class="btn btn-primary">
+                <a href="{{ route('customers.create') }}" class="btn btn-custom-green">
                     <i class="bi bi-person-plus"></i> Registrar Primer Cliente
                 </a>
             </div>
@@ -204,6 +204,16 @@
 }
 .btn-group .btn {
     margin: 0 2px;
+}
+.btn-custom-green {
+    background-color: #00C853;
+    border-color: #00C853;
+    color: #fff;
+}
+.btn-custom-green:hover {
+    background-color: #009b3a;
+    border-color: #009b3a;
+    color: #fff;
 }
 </style>
 @endsection

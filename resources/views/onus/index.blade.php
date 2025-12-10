@@ -20,7 +20,7 @@
             </a>
             
             <!-- Botón Nueva ONU -->
-            <a href="{{ route('onus.create') }}" class="btn btn-primary btn-sm">
+            <a href="{{ route('onus.create') }}" class="btn btn-custom-green btn-sm">
                 <i class="fas fa-plus me-1"></i>Nueva ONU
             </a>
         </div>
@@ -118,7 +118,7 @@
             <i class="fas fa-wifi fa-2x mb-3"></i>
             <h4>No hay ONUs registradas aún</h4>
             <p>Comienza agregando la primera ONU al sistema.</p>
-            <a href="{{ route('onus.create') }}" class="btn btn-primary">
+            <a href="{{ route('onus.create') }}" class="btn btn-custom-green">
                 <i class="fas fa-plus me-2"></i>Registrar Primera ONU
             </a>
         </div>
@@ -135,12 +135,15 @@
 .btn-group .btn {
     margin: 0 2px;
 }
-.table th {
-    font-weight: 600;
+.btn-custom-green {
+    background-color: #00C853;
+    border-color: #00C853;
+    color: #fff;
 }
-.badge {
-    font-size: 0.75em;
-    text-transform: capitalize;
+.btn-custom-green:hover {
+    background-color: #009b3a;
+    border-color: #009b3a;
+    color: #fff;
 }
 </style>
 @endsection

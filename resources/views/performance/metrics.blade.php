@@ -43,7 +43,7 @@
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-md-6">
-                            <h1 class="card-title mb-1">🌐 Panel de Monitoreo de Red</h1>
+                            <h1 class="card-title mb-1">Panel de Monitoreo de Red</h1>
                             <p class="card-text mb-0">Estado general en tiempo real de la infraestructura OLT/GPON</p>
                         </div>
                         <div class="col-md-6 text-end">
@@ -80,15 +80,15 @@
                 <div class="card-body text-center py-3">
                     <div class="btn-group" role="group" aria-label="Botones de reporte">
                         <!-- Botón para Vista Previa -->
-                        <a href="{{ route('reports.daily.preview') }}" 
-                           class="btn btn-outline-primary btn-lg" 
+                        <a href="{{ route('reports.daily.preview') }}"
+                           class="btn btn-report-preview btn-lg"
                            target="_blank">
                             <i class="fas fa-eye me-2"></i>Vista Previa Reporte
                         </a>
-                        
+
                         <!-- Botón para Descargar PDF -->
-                        <a href="{{ route('reports.daily') }}" 
-                           class="btn btn-outline-success btn-lg">
+                        <a href="{{ route('reports.daily') }}"
+                           class="btn btn-report-download btn-lg">
                             <i class="fas fa-download me-2"></i>Descargar PDF
                         </a>
                     </div>
@@ -580,6 +580,31 @@
 .btn-outline-success:hover {
     background-color: #198754;
     color: white;
+}
+
+/* botones de reportes: tonalidades específicas */
+.btn-report-preview {
+    background-color: #0d6efd !important; /* azul primario */
+    border-color: #0d6efd !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+.btn-report-preview:hover {
+    background-color: #0b5ed7 !important;
+    border-color: #0b5ed7 !important;
+    color: #fff !important;
+}
+
+.btn-report-download {
+    background-color: #20c997 !important; /* verde ligeramente distinto */
+    border-color: #20c997 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+}
+.btn-report-download:hover {
+    background-color: #198754 !important;
+    border-color: #198754 !important;
+    color: #fff !important;
 }
 </style>
 
