@@ -174,7 +174,7 @@
                     </div>
                     <div class="col-12">
                         <small class="text-muted">Sistema:</small>
-                        <p class="mb-0"><small>CODENAME FreeOLT - SOLUCIONES TECNOLÓGICAS SUMMA DE MÉXICO</small></p>
+                        <p class="mb-0"><small>INTERSANPABLO-TU PROVEEDOR DE INTERNET</small></p>
                     </div>
                 </div>
             </div>
