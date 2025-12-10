@@ -41,9 +41,13 @@ class RegisterRequestController extends Controller
             ]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
+            $errors = array_map(function($messages) {
+                return is_array($messages) ? implode(', ', $messages) : $messages;
+            }, $e->errors());
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Error de validación: ' . implode(' ', $e->errors())[0]
+                'message' => 'Error de validación: ' . implode(' ', $errors)
             ], 422);
         } catch (\Exception $e) {
             \Log::error('Error en solicitud de registro: ' . $e->getMessage());
