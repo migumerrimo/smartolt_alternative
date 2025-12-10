@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00c853 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -20,9 +20,9 @@
             backdrop-filter: blur(10px);
         }
         .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FFFF 0%, #FFFF 100%);
             border-radius: 15px 15px 0 0;
-            color: white;
+            color: black;
             padding: 2rem;
             text-align: center;
         }
@@ -53,8 +53,7 @@
             <div class="col-md-6 col-lg-5">
                 <div class="card login-card">
                     <div class="login-header">
-                        <h2 class="mb-1">Bienvenido a CODENAME FreeOLT</h2>
-                        <p class="mb-0 opacity-75">ALPHA 0.1.0</p>
+                        <img src="{{ asset('images/intersanpablo-logo.png') }}" alt="Intersan Pablo" style="height:125px; object-fit:contain;" class="mb-2">
                     </div>
                     <div class="card-body p-4">
                         @if($errors->any())
@@ -127,7 +126,7 @@
 
                             <div class="text-center mt-2">
                                 <small class="text-muted">
-                                    SOLUCIONES TECNOLÓGICAS SUMMA DE MÉXICO &copy; {{ date('Y') }}
+                                    INTERSANPABLO &copy; {{ date('Y') }}
                                 </small>
                             </div>
                         </form>
