@@ -107,8 +107,32 @@ class OltSshService
 
     public function getAlarms()
     {
-        // Comando genérico; ajusta según el fabricante/modelo si es necesario
+        // Comando simple; mantenemos para compatibilidad
         return $this->exec('display alarm active');
+    }
+
+    /**
+     * Obtiene el historial/completo de alarmas en Huawei MA5680T.
+     * Usa enable y desactiva el paginado para evitar prompts.
+     */
+    public function getAlarmHistory()
+    {
+        $this->ssh->write("\r\n");
+        usleep(200000);
+        $this->ssh->write("enable\r\n");
+        usleep(150000);
+        // Evita paginación interactiva
+        $this->ssh->write("screen-length 0 temporary\r\n");
+        usleep(150000);
+        $this->ssh->write("display alarm history all\r\n");
+        usleep(400000);
+        $this->ssh->write("exit\r\n");
+        usleep(300000);
+        $output = $this->ssh->read();
+        return [
+            'status' => 'success',
+            'raw' => $output
+        ];
     }
 
     public function listOnus()
