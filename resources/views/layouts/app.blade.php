@@ -11,25 +11,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root {
-            --sidebar-width: 250px;
-            --content-padding: 2rem;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
         }
 
         body {
             font-size: .9rem;
+            display: flex;
+            flex-direction: row;
         }
 
+        /* SIDEBAR - FIJO EN DESKTOP */
         .sidebar {
+            width: 250px;
             height: 100vh;
             background-color: #00C853;
             position: fixed;
             top: 0;
             left: 0;
-            width: var(--sidebar-width);
             overflow-y: auto;
+            overflow-x: hidden;
             padding: 1rem 0.5rem;
             transition: transform 0.3s ease;
+            z-index: 1000;
         }
 
         .sidebar .nav-link {
@@ -37,6 +49,7 @@
             padding: .75rem 1rem;
             border-radius: 8px;
             margin-bottom: 0.5rem;
+            white-space: nowrap;
         }
 
         .sidebar .nav-link.active, 
@@ -69,130 +82,192 @@
             text-align: center;
         }
 
-        /* Main content - dinámico */
+        /* MAIN CONTENT - FLEX GROW */
         main {
-            margin-left: var(--sidebar-width);
-            padding: var(--content-padding);
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
             min-height: 100vh;
-            transition: margin-left 0.3s ease, padding 0.3s ease;
+            width: calc(100% - 250px);
+            overflow-x: hidden;
+            transition: all 0.3s ease;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            :root {
-                --sidebar-width: 0;
-                --content-padding: 1rem;
-            }
-
-            .sidebar {
-                transform: translateX(-100%);
-                z-index: 1000;
-                box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            }
-
-            .sidebar.show {
-                transform: translateX(0);
-            }
-
-            main {
-                margin-left: 0;
-            }
-        }
-
-        /* Alertas */
+        /* ALERTAS */
         .alert {
             margin-bottom: 1.5rem;
         }
 
-        /* Mejora visual */
         .nav-link i {
             margin-right: 0.5rem;
+        }
+
+        /* ============================================ */
+        /* RESPONSIVE - TABLET (768px) */
+        /* ============================================ */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            main {
+                width: calc(100% - 200px);
+                margin-left: 200px;
+                padding: 1.5rem;
+            }
+        }
+
+        /* ============================================ */
+        /* RESPONSIVE - MOBILE (768px) */
+        /* ============================================ */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                padding: 0.5rem;
+                border-top: 1px solid rgba(255,255,255,.1);
+            }
+
+            .sidebar .logo-container {
+                display: none;
+            }
+
+            .sidebar .nav-flex-column {
+                display: flex;
+                flex-direction: row;
+                gap: 0;
+                overflow-x: auto;
+            }
+
+            .sidebar .nav-link {
+                padding: 0.5rem;
+                margin: 0;
+                font-size: 0.75rem;
+                flex: 1 0 auto;
+                text-align: center;
+            }
+
+            main {
+                margin-left: 0;
+                width: 100%;
+                padding: 1rem;
+                margin-bottom: 80px; /* Espacio para sidebar mobile */
+                min-height: calc(100vh - 80px);
+            }
+
+            .sidebar hr {
+                display: none;
+            }
+
+            .sidebar .navbar-nav {
+                display: none;
+            }
+        }
+
+        /* ============================================ */
+        /* RESPONSIVE - TELÉFONO PEQUEÑO (576px) */
+        /* ============================================ */
+        @media (max-width: 576px) {
+            main {
+                padding: 0.75rem;
+                margin-bottom: 80px;
+            }
+
+            .sidebar .nav-link {
+                padding: 0.4rem 0.2rem;
+                font-size: 0.65rem;
+            }
+
+            .sidebar .nav-link i {
+                margin-right: 0.2rem;
+            }
+
+            .card {
+                margin-bottom: 0.5rem;
+            }
         }
     </style>
 
     @yield('styles')
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row g-0">
-        <!-- Sidebar -->
-        <nav class="sidebar d-none d-md-block" id="sidebar">
-            <div class="logo-container">
-                <img src="{{ asset('images/intersanpablo-logo.png') }}" alt="INTERSANPABLO" />
-                <div class="logo-text">INTERSANPABLO</div>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="logo-container">
+            <img src="{{ asset('images/intersanpablo-logo.png') }}" alt="INTERSANPABLO" />
+            <div class="logo-text">INTERSANPABLO</div>
+        </div>
+
+        <ul class="nav flex-column nav-flex-column">
+            <li><a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ route('dashboard') }}"><i class="bi bi-house-fill"></i> <span class="d-none d-lg-inline">Dashboard</span></a></li>
+            <li><a class="nav-link {{ request()->is('customers*') ? 'active' : '' }}" href="{{ route('customers.index') }}"><i class="bi bi-people-fill"></i> <span class="d-none d-lg-inline">Clientes</span></a></li>
+            <li><a class="nav-link {{ request()->is('olts*') ? 'active' : '' }}" href="{{ route('olts.index') }}"><i class="bi bi-hdd-network-fill"></i> <span class="d-none d-lg-inline">OLTs</span></a></li>
+            <li><a class="nav-link {{ request()->is('onus*') ? 'active' : '' }}" href="{{ route('onus.index') }}"><i class="bi bi-router-fill"></i> <span class="d-none d-lg-inline">ONUs</span></a></li>
+            <li><a class="nav-link {{ request()->is('vlans*') ? 'active' : '' }}" href="{{ route('vlans.index') }}"><i class="bi bi-diagram-3-fill"></i> <span class="d-none d-lg-inline">VLANs</span></a></li>
+            <li><a class="nav-link {{ request()->is('alarms*') ? 'active' : '' }}" href="{{ route('alarms.index') }}"><i class="bi bi-exclamation-triangle-fill"></i> <span class="d-none d-lg-inline">Alertas</span></a></li>
+            <li><a class="nav-link {{ request()->is('dba-profiles*') ? 'active' : '' }}" href="{{ route('dba-profiles.index') }}"><i class="bi bi-list-columns-reverse"></i> <span class="d-none d-lg-inline">Perfiles DBA</span></a></li>
+            <li><a class="nav-link {{ request()->is('change-history*') ? 'active' : '' }}" href="{{ route('change-history.index') }}"><i class="bi bi-clock-history"></i> <span class="d-none d-lg-inline">Historial</span></a></li>
+            <li><a class="nav-link {{ request()->is('service-profiles*') ? 'active' : '' }}" href="{{ route('service-profiles.index') }}"><i class="bi bi-box-fill"></i> <span class="d-none d-lg-inline">Perfiles</span></a></li>
+        </ul>
+
+        <hr class="bg-white mt-3 d-none d-lg-block">
+
+        <ul class="navbar-nav d-none d-lg-flex">
+            <li class="nav-item dropdown w-100">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    👤 {{ Auth::user()->name ?? 'Usuario' }}
+                </a>
+                <ul class="dropdown-menu">
+                    <li><span class="dropdown-item-text small"><strong>Rol:</strong> {{ Auth::user()->role ?? 'N/A' }}</span></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item text-danger">
+                                🚪 Cerrar Sesión
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
+        @endif
 
-            <ul class="nav flex-column">
-                <li><a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ route('dashboard') }}"><i class="bi bi-house-fill"></i> Dashboard</a></li>
-                <li><a class="nav-link {{ request()->is('customers*') ? 'active' : '' }}" href="{{ route('customers.index') }}"><i class="bi bi-people-fill"></i> Clientes</a></li>
-                <li><a class="nav-link {{ request()->is('olts*') ? 'active' : '' }}" href="{{ route('olts.index') }}"><i class="bi bi-hdd-network-fill"></i> OLTs</a></li>
-                <li><a class="nav-link {{ request()->is('onus*') ? 'active' : '' }}" href="{{ route('onus.index') }}"><i class="bi bi-router-fill"></i> ONUs</a></li>
-                <li><a class="nav-link {{ request()->is('vlans*') ? 'active' : '' }}" href="{{ route('vlans.index') }}"><i class="bi bi-diagram-3-fill"></i> VLANs</a></li>
-                <li><a class="nav-link {{ request()->is('alarms*') ? 'active' : '' }}" href="{{ route('alarms.index') }}"><i class="bi bi-exclamation-triangle-fill"></i> Alertas</a></li>
-                <li><a class="nav-link {{ request()->is('dba-profiles*') ? 'active' : '' }}" href="{{ route('dba-profiles.index') }}"><i class="bi bi-list-columns-reverse"></i> Perfiles DBA</a></li>
-                <li><a class="nav-link {{ request()->is('change-history*') ? 'active' : '' }}" href="{{ route('change-history.index') }}"><i class="bi bi-clock-history"></i> Historial</a></li>
-                <li><a class="nav-link {{ request()->is('service-profiles*') ? 'active' : '' }}" href="{{ route('service-profiles.index') }}"><i class="bi bi-box-fill"></i> Perfiles</a></li>
-            </ul>
+        @if($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error!</strong>
+                @foreach($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
 
-            <hr class="bg-white mt-3">
+        @yield('content')
+    </main>
 
-            <ul class="navbar-nav">
-                <li class="nav-item dropdown w-100">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                        👤 {{ Auth::user()->name }}
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><span class="dropdown-item-text small"><strong>Rol:</strong> {{ Auth::user()->role }}</span></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="dropdown-item text-danger">
-                                    🚪 Cerrar Sesión
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <!-- Main content -->
-        <main class="col-12">
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            @if($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Error!</strong>
-                    @foreach($errors->all() as $error)
-                        <div>{{ $error }}</div>
-                    @endforeach
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            @yield('content')
-        </main>
-    </div>
-</div>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-    // Toggle sidebar en móvil (opcional)
-    function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('show');
-    }
-</script>
-
-@yield('scripts')
+    @yield('scripts')
 </body>
 </html>
