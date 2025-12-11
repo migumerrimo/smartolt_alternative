@@ -20,17 +20,17 @@ class OltSshService
 
     public function getVlans()
     {
-        // Ensure we are on a fresh prompt
+        // Asegurar que estamos en un prompt limpio
         $this->ssh->write("\r\n");
         usleep(200000);
 
-        // Some Huawei MA5680T devices require entering enable and a specific
-        // variant of the command. Use 'enable' then 'display vlan all smart'.
+        // Algunos dispositivos Huawei MA5680T requieren entrar en enable y una
+        // variante específica del comando. Usar 'enable' y luego 'display vlan all smart'.
         $this->ssh->write("enable\r\n");
         usleep(150000);
-        // Request all VLANs of type smart (adjust if you need other types)
+        // Solicitar todas las VLANs de tipo smart (ajustar si se necesitan otros tipos)
         $this->ssh->write("display vlan all smart\r\n");
-        // exit to close session (avoid save prompts)
+        // exit para cerrar sesión (evitar prompts de guardado)
         $this->ssh->write("exit\r\n");
         usleep(300000);
 
@@ -49,12 +49,12 @@ class OltSshService
      */
     public function exec($cmd)
     {
-        // Allow long-running SSH operations to finish without PHP timeout
+        // Permitir que las operaciones SSH de larga duración finalicen sin tiempo de espera de PHP
         if (function_exists('set_time_limit')) {
             @set_time_limit(0);
         }
 
-        // Ensure prompt
+        // Asegurar prompt
         $this->ssh->write("\r\n");
         usleep(200000);
 
@@ -65,14 +65,14 @@ class OltSshService
 
         foreach ($commands as $c) {
             $this->ssh->write($c . "\r\n");
-            // Give device some time to respond
+            // Dar tiempo al dispositivo para responder
             usleep(200000);
-            // Read whatever the device returned after this command
+            // Leer lo que el dispositivo devolvió después de este comando
             $partial = $this->ssh->read();
             $output .= $partial;
         }
 
-        // If the last command was not an exit/quit, send an exit to close session
+        // Si el último comando no fue exit/quit, enviar exit para cerrar la sesión
         $last = trim(end($commands));
         if (!in_array(strtolower($last), ['exit', 'quit'])) {
             $this->ssh->write("exit\r\n");
@@ -80,7 +80,7 @@ class OltSshService
             $output .= $this->ssh->read();
         }
 
-        // Drain any remaining output (read until stable)
+        // Drenar cualquier salida restante (leer hasta que sea estable)
         $prevLen = 0;
         $tries = 0;
         while ($tries < 5) {
