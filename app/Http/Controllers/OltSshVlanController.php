@@ -194,6 +194,9 @@ class OltSshVlanController extends Controller
         }
 
         // leave config and exit
+
+        $commands[] = 'commit';
+        $commands[] = 'save';
         $commands[] = 'quit';
 
         $out = $ssh->exec($commands);

@@ -139,6 +139,8 @@ class OltSshServiceProfileController extends Controller
         // commit and quit from profile
         $commands[] = 'commit';
         $commands[] = 'quit';
+        $commands[] = 'save';
+        $commands[] = 'quit';
 
         $out = $ssh->exec($commands);
         $raw = $out['raw'] ?? '';

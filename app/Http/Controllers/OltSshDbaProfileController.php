@@ -133,6 +133,7 @@ class OltSshDbaProfileController extends Controller
             $commands[] = 'enable';
             $commands[] = 'config';
             $commands[] = "dba-profile add profile-id {$profileId} profile-name \"{$profileName}\" type{$type} max {$maxKbps}";
+            $commands[] = 'save';
             $commands[] = 'quit';
 
             $out = $ssh->exec($commands);
