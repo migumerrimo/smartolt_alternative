@@ -135,6 +135,114 @@ class OltSshService
         ];
     }
 
+    /**
+     * Obtiene porcentaje de uso de memoria (10 minutos) en Huawei MA5680T.
+     * Formato esperado: "Average usage rate of system memory in 10 minutes: 75%"
+     */
+    public function getMemoryUsage()
+    {
+        $this->ssh->write("\r\n");
+        usleep(200000);
+        $this->ssh->write("enable\r\n");
+        usleep(150000);
+        $this->ssh->write("screen-length 0 temporary\r\n");
+        usleep(150000);
+        $this->ssh->write("display resource occupancy mem\r\n");
+        usleep(300000);
+        $this->ssh->write("exit\r\n");
+        usleep(300000);
+        $output = $this->ssh->read();
+
+        $percent = null;
+        if (preg_match('/Average\s+usage\s+rate\s+of\s+system\s+memory\s+in\s+10\s+minutes:\s*(\d{1,3})%/i', $output, $m)) {
+            $percent = min(100, max(0, (int)$m[1]));
+        }
+
+        return [
+            'status' => 'success',
+            'raw' => $output,
+            'percent' => $percent
+        ];
+    }
+
+    /**
+     * Obtiene porcentaje de uso de CPU (10 minutos) en Huawei MA5680T.
+     * Formato esperado: "Average usage rate of system cpu in 10 minutes: 11%"
+     */
+    public function getCpuOccupancy()
+    {
+        $this->ssh->write("\r\n");
+        usleep(200000);
+        $this->ssh->write("enable\r\n");
+        usleep(150000);
+        $this->ssh->write("screen-length 0 temporary\r\n");
+        usleep(150000);
+        $this->ssh->write("display resource occupancy cpu\r\n");
+        usleep(300000);
+        $this->ssh->write("exit\r\n");
+        usleep(300000);
+        $output = $this->ssh->read();
+
+        $percent = null;
+        if (preg_match('/Average\s+usage\s+rate\s+of\s+system\s+cpu\s+in\s+10\s+minutes:\s*(\d{1,3})%/i', $output, $m)) {
+            $percent = min(100, max(0, (int)$m[1]));
+        }
+
+        return [
+            'status' => 'success',
+            'raw' => $output,
+            'percent' => $percent
+        ];
+    }
+
+    /**
+     * Obtiene porcentaje de uso de almacenamiento FLASH en Huawei MA5680T.
+     * Usa total size e idle size para calcular el porcentaje utilizado.
+     */
+    public function getStorageOccupancy()
+    {
+        $this->ssh->write("\r\n");
+        usleep(200000);
+        $this->ssh->write("enable\r\n");
+        usleep(150000);
+        $this->ssh->write("screen-length 0 temporary\r\n");
+        usleep(150000);
+        $this->ssh->write("display file\r\n");
+        usleep(300000);
+        $this->ssh->write("exit\r\n");
+        usleep(300000);
+        $output = $this->ssh->read();
+
+        $percent = null;
+        $totalSize = null;
+        $idleSize = null;
+
+        // Parsea "FLASH VFS total size: 253952(K)"
+        if (preg_match('/FLASH\s+VFS\s+total\s+size:\s*(\d+)\s*\(K\)/i', $output, $m)) {
+            $totalSize = (int)$m[1];
+        }
+
+        // Parsea "FLASH VFS idle size: 10861(K)"
+        if (preg_match('/FLASH\s+VFS\s+idle\s+size:\s*(\d+)\s*\(K\)/i', $output, $m)) {
+            $idleSize = (int)$m[1];
+        }
+
+        // Calcula porcentaje utilizado: ((total - idle) / total) * 100
+        if ($totalSize !== null && $idleSize !== null && $totalSize > 0) {
+            $usedSize = $totalSize - $idleSize;
+            $percent = (int)round(($usedSize / $totalSize) * 100);
+            $percent = min(100, max(0, $percent));
+        }
+
+        return [
+            'status' => 'success',
+            'raw' => $output,
+            'percent' => $percent,
+            'total_size' => $totalSize,
+            'idle_size' => $idleSize
+        ];
+    }
+
     public function listOnus()
     {
         return $this->exec('display onu all');

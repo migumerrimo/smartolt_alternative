@@ -8,6 +8,7 @@ use App\Models\Onu;
 use App\Models\Alarm;
 use App\Models\Telemetry;
 use App\Models\ChangeHistory;
+use App\Services\OltSshService;
 use Carbon\Carbon;
 
 class PerformanceController extends Controller
@@ -15,6 +16,9 @@ class PerformanceController extends Controller
     public function metrics()
     {
         // Datos reales de tu base de datos
+        $memoryPercentFromOlt = $this->fetchOltMemoryPercent();
+        $cpuPercentFromOlt = $this->fetchOltCpuPercent();
+        $storagePercentFromOlt = $this->fetchOltStoragePercent();
         return view('performance.metrics', [
             // Salud General
             'health_score' => $this->calculateHealthScore(),
@@ -46,9 +50,9 @@ class PerformanceController extends Controller
             'packet_loss' => $this->getPacketLoss(),
             
             // Sistema
-            'cpu_usage' => $this->getCpuUsage(),
-            'memory_usage' => $this->getMemoryUsage(),
-            'storage_usage' => $this->getStorageUsage(),
+            'cpu_usage' => $cpuPercentFromOlt ?? $this->getCpuUsage(),
+            'memory_usage' => $memoryPercentFromOlt ?? $this->getMemoryUsage(),
+            'storage_usage' => $storagePercentFromOlt ?? $this->getStorageUsage(),
             
             // Datos para la tabla de OLTs
             'olts_detailed' => Olt::withCount([
@@ -170,6 +174,70 @@ class PerformanceController extends Controller
             ->first();
             
         return $memory ? (int)$memory->value : 65;
+    }
+
+    /**
+     * Intenta consultar a la primera OLT con SSH activo y obtener el % de memoria.
+     * No detiene la carga si falla; retorna null en ese caso.
+     */
+    private function fetchOltMemoryPercent(): ?int
+    {
+        $olt = Olt::where('ssh_active', true)->first();
+        if (!$olt) return null;
+
+        try {
+            $port = $olt->ssh_port ?: 22;
+            $ssh = new OltSshService($olt->management_ip, $port, $olt->ssh_username, $olt->ssh_password);
+            $res = $ssh->getMemoryUsage();
+            if (($res['status'] ?? '') === 'success' && isset($res['percent']) && $res['percent'] !== null) {
+                return (int)$res['percent'];
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('Memoria OLT no disponible: '.$e->getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Intenta consultar a la primera OLT con SSH activo y obtener el % de CPU.
+     */
+    private function fetchOltCpuPercent(): ?int
+    {
+        $olt = Olt::where('ssh_active', true)->first();
+        if (!$olt) return null;
+
+        try {
+            $port = $olt->ssh_port ?: 22;
+            $ssh = new OltSshService($olt->management_ip, $port, $olt->ssh_username, $olt->ssh_password);
+            $res = $ssh->getCpuOccupancy();
+            if (($res['status'] ?? '') === 'success' && isset($res['percent']) && $res['percent'] !== null) {
+                return (int)$res['percent'];
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('CPU OLT no disponible: '.$e->getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Intenta consultar a la primera OLT con SSH activo y obtener el % de almacenamiento utilizado.
+     */
+    private function fetchOltStoragePercent(): ?int
+    {
+        $olt = Olt::where('ssh_active', true)->first();
+        if (!$olt) return null;
+
+        try {
+            $port = $olt->ssh_port ?: 22;
+            $ssh = new OltSshService($olt->management_ip, $port, $olt->ssh_username, $olt->ssh_password);
+            $res = $ssh->getStorageOccupancy();
+            if (($res['status'] ?? '') === 'success' && isset($res['percent']) && $res['percent'] !== null) {
+                return (int)$res['percent'];
+            }
+        } catch (\Throwable $e) {
+            \Log::warning('Almacenamiento OLT no disponible: '.$e->getMessage());
+        }
+        return null;
     }
     
     private function getStorageUsage()

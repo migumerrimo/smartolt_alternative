@@ -79,7 +79,7 @@
                     <li><a class="nav-link {{ request()->is('olts*') ? 'active' : '' }}" href="{{ route('olts.index') }}"><i class="bi bi-hdd-network-fill"></i> OLTs</a></li>
                     <li><a class="nav-link {{ request()->is('onus*') ? 'active' : '' }}" href="{{ route('onus.index') }}"><i class="bi bi-router-fill"></i> ONUs</a></li>
                     <li><a class="nav-link {{ request()->is('vlans*') ? 'active' : '' }}" href="{{ route('vlans.index') }}"><i class="bi bi-diagram-3-fill"></i> VLANs</a></li>
-                    <li><a class="nav-link {{ request()->is('telemetry*') ? 'active' : '' }}" href="{{ route('telemetry.index') }}"><i class="bi bi-graph-up-arrow"></i> Telemetría</a></li>
+                    <!--<li><a class="nav-link {{ request()->is('telemetry*') ? 'active' : '' }}" href="{{ route('telemetry.index') }}"><i class="bi bi-graph-up-arrow"></i> Telemetría</a></li>-->
                     <li><a class="nav-link {{ request()->is('alarms*') ? 'active' : '' }}" href="{{ route('alarms.index') }}"><i class="bi bi-exclamation-triangle-fill"></i> Alertas</a></li>
                     <li><a class="nav-link {{ request()->is('dba-profiles*') ? 'active' : '' }}" href="{{ route('dba-profiles.index') }}"><i class="bi bi-list-columns-reverse"></i> Perfiles DBA</a></li>
                     <!--<li><a class="nav-link {{ request()->is('device-configs*') ? 'active' : '' }}" href="{{ route('device-configs.index') }}"><i class="bi bi-gear-fill"></i> Configuración</a></li>-->
