@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión-CODENAME FreeOLT </title>
+    <title>Inicio de Sesión-INTERSANPABLO </title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -141,15 +141,15 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">📧 Solicitar Cuenta - FreeOLT</h5>
+                    <h5 class="modal-title">Solicitar Cuenta - INTERSANPABLO</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-info">
                         <small>
-                            <strong>⚠️ Sistema de registro controlado</strong><br>
+                            <strong>Aviso Importante</strong><br>
                             Tu solicitud será revisada por un administrador. 
-                            Te notificaremos por email cuando tu cuenta sea activada.
+                            Te notificaremos cuando tu cuenta sea activada.
                         </small>
                     </div>
                     
@@ -186,7 +186,7 @@
                         <div class="mb-3">
                             <label for="request_notes" class="form-label">Justificación/Motivo *</label>
                             <textarea class="form-control" id="request_notes" name="notes" rows="3" 
-                                      placeholder="Explica por qué necesitas acceso al sistema FreeOLT..."
+                                      placeholder="Escribe aqui..."
                                       required></textarea>
                             <small class="form-text text-muted">
                                 Esta información ayudará al administrador a evaluar tu solicitud

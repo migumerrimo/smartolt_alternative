@@ -2,7 +2,9 @@
 
 @section('content')
 <h2>Perfiles de Servicio</h2>
-<a href="{{ route('service-profiles.create') }}" class="btn btn-primary mb-3">Nuevo Perfil de Servicio</a>
+<a href="{{ route('service-profiles.create') }}" class="btn btn-success mb-3">Nuevo Perfil de Servicio</a>
+<!-- Opción con color personalizado -->
+<!-- <a href="{{ route('service-profiles.create') }}" class="btn mb-3" style="background-color:#ff8800;color:#fff;border:none;">Nuevo Perfil de Servicio</a> -->
 <a href="#" onclick="cargarServiceProfilesOlt()" class="btn btn-secondary mb-3">
     Cargar Perfiles desde OLT
 </a>
