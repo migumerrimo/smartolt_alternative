@@ -106,7 +106,7 @@
     <!-- CARDS PRINCIPALES: OLTs, ONUs, Alarmas, Rendimiento -->
     <div class="row mb-4">
         <!-- OLTs -->
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="card border-primary">
                 <div class="card-header bg-primary text-white">
                     <h6 class="card-title mb-0">🔌 OLTs</h6>
@@ -127,7 +127,7 @@
         </div>
 
         <!-- ONUs -->
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="card border-success">
                 <div class="card-header bg-success text-white">
                     <h6 class="card-title mb-0">📡 ONUs</h6>
@@ -151,7 +151,7 @@
         </div>
 
         <!-- Alarmas -->
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="card border-danger">
                 <div class="card-header bg-danger text-white">
                     <h6 class="card-title mb-0">🚨 Alarmas</h6>
@@ -179,7 +179,7 @@
         </div>
 
         <!-- Rendimiento -->
-        <div class="col-md-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="card border-info">
                 <div class="card-header bg-info text-white">
                     <h6 class="card-title mb-0">📈 Rendimiento</h6>
@@ -293,7 +293,7 @@
                 <div class="card-body">
                     <div class="row">
                         <!-- Gráfico de Ancho de Banda -->
-                        <div class="col-md-4">
+                        <div class="col-12 col-md-6 col-lg-4">
                             <div class="card border-0">
                                 <div class="card-body text-center">
                                     <h6 class="card-title text-info">
@@ -312,7 +312,7 @@
                         </div>
 
                         <!-- Gráfico de Latencia -->
-                        <div class="col-md-4">
+                        <div class="col-12 col-md-6 col-lg-4">
                             <div class="card border-0">
                                 <div class="card-body text-center">
                                     <h6 class="card-title text-warning">
@@ -331,7 +331,7 @@
                         </div>
 
                         <!-- Gráfico de Packet Loss -->
-                        <div class="col-md-4">
+                        <div class="col-12 col-md-6 col-lg-4">
                             <div class="card border-0">
                                 <div class="card-body text-center">
                                     <h6 class="card-title text-danger">
@@ -363,7 +363,7 @@
 
     <!-- Distribución de ONUs por Estado -->
     <div class="row mb-4">
-        <div class="col-md-6">
+        <div class="col-12 col-lg-6">
             <div class="card">
                 <div class="card-header bg-light">
                     <h6 class="card-title mb-0">📡 Distribución de ONUs</h6>
@@ -411,7 +411,7 @@
         </div>
 
         <!-- Estado del Sistema -->
-        <div class="col-md-6">
+        <div class="col-12 col-lg-6">
             <div class="card">
                 <div class="card-header bg-light">
                     <h6 class="card-title mb-0">⚙️ Estado del Sistema</h6>
